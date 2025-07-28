@@ -1,5 +1,4 @@
 # yaml-language-server: $schema=https://docs.mergify.com/mergify-configuration-schema.json
-
 queue_rules:
   - name: default
     queue_conditions:

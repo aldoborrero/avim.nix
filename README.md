@@ -10,7 +10,7 @@ Having my configuration ready as a `flake` allows me to run `nvim` already confi
 
 ## Setup
 
-### \[Optional\] Add flake registry shortcut
+### [Optional] Add flake registry shortcut
 
 You can add the following registry shortcut to type less characters:
 
