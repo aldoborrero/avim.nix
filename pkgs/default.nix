@@ -4,7 +4,6 @@
     self',
     myPkgs,
     inputs',
-    system,
     ...
   }: {
     packages = rec {
@@ -18,7 +17,6 @@
       in
         pkgs.callPackage ./avim {
           inherit (nixvim') makeNixvimWithModule;
-          inherit system;
         };
     };
 
