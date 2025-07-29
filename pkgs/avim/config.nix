@@ -99,6 +99,18 @@
       options.desc = "Clear search highlights";
     }
 
+    # Window splits
+    {
+      key = "|";
+      action = "<cmd>vsplit<CR>";
+      options.desc = "Vertical split";
+    }
+    {
+      key = "\\";
+      action = "<cmd>split<CR>";
+      options.desc = "Horizontal split";
+    }
+
     # File tree
     {
       key = "<leader>e";
@@ -300,6 +312,29 @@
       options.desc = "Git browse (open)";
     }
 
+    # Search and Replace (Spectre)
+    {
+      key = "<leader>sr";
+      action = "<cmd>lua require('spectre').open()<CR>";
+      options.desc = "Search and replace";
+    }
+    {
+      key = "<leader>sw";
+      action = "<cmd>lua require('spectre').open_visual({select_word=true})<CR>";
+      options.desc = "Search current word";
+    }
+    {
+      mode = "v";
+      key = "<leader>sw";
+      action = "<esc><cmd>lua require('spectre').open_visual()<CR>";
+      options.desc = "Search selected text";
+    }
+    {
+      key = "<leader>sp";
+      action = "<cmd>lua require('spectre').open_file_search({select_word=true})<CR>";
+      options.desc = "Search in current file";
+    }
+
     # Snacks utilities
     {
       key = "<leader>u|";
@@ -455,6 +490,11 @@
     }
     {
       key = "<F6>";
+      action = "<cmd>lua require('toggleterm.terminal').Terminal:new({ cmd = 'lazygit' }):toggle()<CR>";
+      options.desc = "Open LazyGit";
+    }
+    {
+      key = "<leader>gg";
       action = "<cmd>lua require('toggleterm.terminal').Terminal:new({ cmd = 'lazygit' }):toggle()<CR>";
       options.desc = "Open LazyGit";
     }
@@ -635,6 +675,7 @@
           installRustc = false;
         };
         tailwindcss.enable = true;
+        starpls.enable = true;
       };
     };
 
@@ -1073,6 +1114,10 @@
           hide_signcolumn = false;
         };
       };
+    };
+
+    spectre = {
+      enable = true;
     };
 
     conform-nvim = {
