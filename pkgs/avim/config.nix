@@ -464,29 +464,14 @@
 
     # Terminal and AI
     {
+      key = "<F4>";
+      action = "<cmd>ClaudeCode<CR>";
+      options.desc = "Open Claude Code";
+    }
+    {
       key = "<F5>";
-      action.__raw = ''
-        function()
-          -- Check if Claude Code window is open
-          local claude_open = false
-          for _, win in ipairs(vim.api.nvim_list_wins()) do
-            local buf = vim.api.nvim_win_get_buf(win)
-            local ft = vim.api.nvim_buf_get_option(buf, "filetype")
-            if ft == "claude" or ft == "claude-code" then
-              claude_open = true
-              -- Close the window
-              vim.api.nvim_win_close(win, true)
-              break
-            end
-          end
-
-          -- If not open, open it
-          if not claude_open then
-            vim.cmd("ClaudeCode")
-          end
-        end
-      '';
-      options.desc = "Toggle Claude Code";
+      action = "<cmd>ClaudeCodeContinue<CR>";
+      options.desc = "Continue Claude Code conversation";
     }
     {
       key = "<F6>";
@@ -502,8 +487,6 @@
       key = "<F7>";
       action.__raw = ''
         function()
-          -- ToggleTerm already has built-in toggle behavior
-          -- but we'll ensure it works properly
           vim.cmd("ToggleTerm")
         end
       '';
@@ -802,16 +785,6 @@
       };
       window = {
         width = 30;
-        mappings = {
-          "<S-CR>" = "system_open";
-          "<Space>" = "none";
-          "[b" = "prev_source";
-          "]b" = "next_source";
-          "O" = "system_open";
-          "Y" = "copy_selector";
-          "h" = "parent_or_close";
-          "l" = "child_or_open";
-        };
       };
       filesystem = {
         followCurrentFile = {
