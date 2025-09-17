@@ -1,4 +1,5 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   colorschemes.catppuccin = {
     enable = true;
   };
@@ -355,13 +356,21 @@
     # Flash navigation
     {
       key = "s";
-      mode = ["n" "x" "o"];
+      mode = [
+        "n"
+        "x"
+        "o"
+      ];
       action.__raw = "function() require('flash').jump() end";
       options.desc = "Flash jump";
     }
     {
       key = "S";
-      mode = ["n" "x" "o"];
+      mode = [
+        "n"
+        "x"
+        "o"
+      ];
       action.__raw = "function() require('flash').treesitter() end";
       options.desc = "Flash treesitter";
     }
@@ -373,7 +382,10 @@
     }
     {
       key = "R";
-      mode = ["o" "x"];
+      mode = [
+        "o"
+        "x"
+      ];
       action.__raw = "function() require('flash').treesitter_search() end";
       options.desc = "Flash treesitter search";
     }
@@ -668,21 +680,48 @@
         keymap = {
           preset = "default";
           # Custom keymaps
-          "<C-b>" = ["scroll_documentation_up" "fallback"];
-          "<C-f>" = ["scroll_documentation_down" "fallback"];
-          "<C-Space>" = ["show" "show_documentation" "hide_documentation"];
-          "<C-e>" = ["hide" "fallback"];
-          "<CR>" = ["accept" "fallback"];
-          "<Tab>" = ["select_next" "fallback"];
-          "<S-Tab>" = ["select_prev" "fallback"];
+          "<C-b>" = [
+            "scroll_documentation_up"
+            "fallback"
+          ];
+          "<C-f>" = [
+            "scroll_documentation_down"
+            "fallback"
+          ];
+          "<C-Space>" = [
+            "show"
+            "show_documentation"
+            "hide_documentation"
+          ];
+          "<C-e>" = [
+            "hide"
+            "fallback"
+          ];
+          "<CR>" = [
+            "accept"
+            "fallback"
+          ];
+          "<Tab>" = [
+            "select_next"
+            "fallback"
+          ];
+          "<S-Tab>" = [
+            "select_prev"
+            "fallback"
+          ];
         };
         sources = {
-          default = ["lsp" "path" "snippets" "buffer"];
+          default = [
+            "lsp"
+            "path"
+            "snippets"
+            "buffer"
+          ];
           providers = {
             lsp = {
               name = "LSP";
               module = "blink.cmp.sources.lsp";
-              fallbacks = ["buffer"];
+              fallbacks = [ "buffer" ];
             };
             path = {
               name = "Path";
@@ -778,7 +817,11 @@
       closeIfLastWindow = true;
       enableGitStatus = true;
       enableDiagnostics = true;
-      sources = ["filesystem" "buffers" "git_status"];
+      sources = [
+        "filesystem"
+        "buffers"
+        "git_status"
+      ];
       sourceSelector = {
         winbar = true;
         contentLayout = "center";
@@ -804,11 +847,21 @@
       enable = true;
       settings = {
         signs = {
-          add = {text = "│";};
-          change = {text = "│";};
-          delete = {text = "_";};
-          topdelete = {text = "‾";};
-          changedelete = {text = "~";};
+          add = {
+            text = "│";
+          };
+          change = {
+            text = "│";
+          };
+          delete = {
+            text = "_";
+          };
+          topdelete = {
+            text = "‾";
+          };
+          changedelete = {
+            text = "~";
+          };
         };
       };
     };
@@ -862,7 +915,9 @@
     snacks = {
       enable = true;
       settings = {
-        bigfile = {enabled = true;};
+        bigfile = {
+          enabled = true;
+        };
         dashboard = {
           enabled = true;
           preset = {
@@ -917,17 +972,33 @@
             }
           ];
         };
-        notifier = {enabled = true;};
-        quickfile = {enabled = true;};
-        statuscolumn = {enabled = true;};
-        words = {enabled = true;};
+        notifier = {
+          enabled = true;
+        };
+        quickfile = {
+          enabled = true;
+        };
+        statuscolumn = {
+          enabled = true;
+        };
+        words = {
+          enabled = true;
+        };
         indent = {
           enabled = true;
-          indent = {char = "▏";};
-          scope = {char = "▏";};
-          animate = {enabled = false;};
+          indent = {
+            char = "▏";
+          };
+          scope = {
+            char = "▏";
+          };
+          animate = {
+            enabled = false;
+          };
         };
-        scope = {enabled = true;};
+        scope = {
+          enabled = true;
+        };
         zen = {
           enabled = true;
           toggles = {
@@ -961,7 +1032,9 @@
           enabled = true;
           ui_select = true;
         };
-        gitbrowse = {enabled = true;};
+        gitbrowse = {
+          enabled = true;
+        };
       };
     };
 
@@ -1034,7 +1107,12 @@
           FIX = {
             icon = " ";
             color = "error";
-            alt = ["FIXME" "BUG" "FIXIT" "ISSUE"];
+            alt = [
+              "FIXME"
+              "BUG"
+              "FIXIT"
+              "ISSUE"
+            ];
           };
           TODO = {
             icon = " ";
@@ -1047,21 +1125,32 @@
           WARN = {
             icon = " ";
             color = "warning";
-            alt = ["WARNING" "XXX"];
+            alt = [
+              "WARNING"
+              "XXX"
+            ];
           };
           PERF = {
             icon = " ";
-            alt = ["OPTIM" "PERFORMANCE" "OPTIMIZE"];
+            alt = [
+              "OPTIM"
+              "PERFORMANCE"
+              "OPTIMIZE"
+            ];
           };
           NOTE = {
             icon = " ";
             color = "hint";
-            alt = ["INFO"];
+            alt = [ "INFO" ];
           };
           TEST = {
             icon = "⏲ ";
             color = "test";
-            alt = ["TESTING" "PASSED" "FAILED"];
+            alt = [
+              "TESTING"
+              "PASSED"
+              "FAILED"
+            ];
           };
         };
       };
@@ -1097,22 +1186,28 @@
       enable = true;
       settings = {
         formatters_by_ft = {
-          css = ["prettier"];
-          go = ["gofumpt" "goimports"];
-          html = ["prettier"];
-          javascript = ["deno"];
-          json = ["prettier"];
-          lua = ["stylua"];
-          markdown = ["prettier"];
-          nix = ["nixfmt-rfc-style"];
-          python = ["ruff_format" "ruff_organize_imports"];
-          rust = ["rustfmt"];
-          sh = ["shfmt"];
-          terraform = ["terraform_fmt"];
-          toml = ["taplo"];
-          typescript = ["deno_fmt"];
-          yaml = ["prettier"];
-          "_" = ["trim_whitespace"];
+          css = [ "prettier" ];
+          go = [
+            "gofumpt"
+            "goimports"
+          ];
+          html = [ "prettier" ];
+          javascript = [ "deno" ];
+          json = [ "prettier" ];
+          lua = [ "stylua" ];
+          markdown = [ "prettier" ];
+          nix = [ "nixfmt-rfc-style" ];
+          python = [
+            "ruff_format"
+            "ruff_organize_imports"
+          ];
+          rust = [ "rustfmt" ];
+          sh = [ "shfmt" ];
+          terraform = [ "terraform_fmt" ];
+          toml = [ "taplo" ];
+          typescript = [ "deno_fmt" ];
+          yaml = [ "prettier" ];
+          "_" = [ "trim_whitespace" ];
         };
         format_after_save = {
           lsp_fallback = true;
