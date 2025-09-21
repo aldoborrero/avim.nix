@@ -1,12 +1,18 @@
-# AstroNvim.nix
+# avim.nix
 
-My [AstroNvim](https://astronvim.com/) configuration with Nix!
+My custom Neovim configuration built with [Nixvim](https://github.com/nix-community/nixvim)!
 
 ## Why?
 
-Having my configuration ready as a `flake` allows me to run `nvim` already configured to my taste wherever I want!
+Having my Neovim configuration ready as a `flake` allows me to run `nvim` already configured to my taste wherever I want with full reproducibility.
 
 **Note**: This is a personal configuration tailored to my specific needs. Feel free to fork this repository and customize on your own!
+
+## Features
+
+- **Nix Integration**: Fully reproducible Neovim setup using [Nixvim](https://github.com/nix-community/nixvim)
+- **Blueprint Structure**: Uses the [Blueprint](https://github.com/numtide/blueprint) framework for organizing Nix code
+- **Automatic Updates**: Weekly scheduled updates for dependencies 
 
 ## Setup
 
@@ -15,13 +21,13 @@ Having my configuration ready as a `flake` allows me to run `nvim` already confi
 You can add the following registry shortcut to type less characters:
 
 ```console
-$ nix registry add astronvim github:aldoborrero/astronvim.nix
+$ nix registry add avim github:aldoborrero/astronvim.nix
 ```
 
-## Running AstroNvim
+## Running avim
 
 ```console
-$ nix run astronvim#astronvim
+$ nix run avim#avim
 ```
 
 ## Acknowledgements
