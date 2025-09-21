@@ -8,6 +8,7 @@ queue_rules:
       - check-success = nix-flake-check
       - check-success = Garnix CI / All Garnix checks
     merge_method: rebase
+
 pull_request_rules:
   - name: merge using the merge queue
     conditions: []

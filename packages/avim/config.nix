@@ -477,12 +477,38 @@
     # Terminal and AI
     {
       key = "<F4>";
-      action = "<cmd>ClaudeCode<CR>";
+      action.__raw = ''
+        function() require('toggleterm.terminal').Terminal:new({ 
+                cmd = 'claude', 
+                count = 2, 
+                direction = 'horizontal', 
+                hide_numbers = true,
+                size = function(term)
+                  return math.floor(vim.o.lines * 0.4)
+                end,
+                on_open = function(term)
+                  vim.cmd("startinsert!")
+                  vim.api.nvim_buf_set_keymap(term.bufnr, "t", "<C-x>", "<C-\\><C-n>exit<CR>", {noremap = true, silent = true})
+                end
+              }):toggle() end'';
       options.desc = "Open Claude Code";
     }
     {
       key = "<F5>";
-      action = "<cmd>ClaudeCodeContinue<CR>";
+      action.__raw = ''
+        function() require('toggleterm.terminal').Terminal:new({ 
+                cmd = 'claude --continue', 
+                count = 3, 
+                direction = 'horizontal', 
+                hide_numbers = true,
+                size = function(term)
+                  return math.floor(vim.o.lines * 0.4)
+                end,
+                on_open = function(term)
+                  vim.cmd("startinsert!")
+                  vim.api.nvim_buf_set_keymap(term.bufnr, "t", "<C-x>", "<C-\\><C-n>exit<CR>", {noremap = true, silent = true})
+                end
+              }):toggle() end'';
       options.desc = "Continue Claude Code conversation";
     }
     {
