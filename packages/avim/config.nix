@@ -477,38 +477,12 @@
     # Terminal and AI
     {
       key = "<F4>";
-      action.__raw = ''
-        function() require('toggleterm.terminal').Terminal:new({ 
-                cmd = 'claude', 
-                count = 2, 
-                direction = 'horizontal', 
-                hide_numbers = true,
-                size = function(term)
-                  return math.floor(vim.o.lines * 0.4)
-                end,
-                on_open = function(term)
-                  vim.cmd("startinsert!")
-                  vim.api.nvim_buf_set_keymap(term.bufnr, "t", "<C-x>", "<C-\\><C-n>exit<CR>", {noremap = true, silent = true})
-                end
-              }):toggle() end'';
+      action = "<cmd>ClaudeCode<CR>";
       options.desc = "Open Claude Code";
     }
     {
       key = "<F5>";
-      action.__raw = ''
-        function() require('toggleterm.terminal').Terminal:new({ 
-                cmd = 'claude --continue', 
-                count = 3, 
-                direction = 'horizontal', 
-                hide_numbers = true,
-                size = function(term)
-                  return math.floor(vim.o.lines * 0.4)
-                end,
-                on_open = function(term)
-                  vim.cmd("startinsert!")
-                  vim.api.nvim_buf_set_keymap(term.bufnr, "t", "<C-x>", "<C-\\><C-n>exit<CR>", {noremap = true, silent = true})
-                end
-              }):toggle() end'';
+      action = "<cmd>ClaudeCodeContinue<CR>";
       options.desc = "Continue Claude Code conversation";
     }
     {
@@ -525,7 +499,18 @@
       key = "<F7>";
       action.__raw = ''
         function()
-          vim.cmd("ToggleTerm")
+          local Terminal = require('toggleterm.terminal').Terminal
+          if not _G.float_term then
+            _G.float_term = Terminal:new({
+              count = 1,
+              direction = 'float',
+              hidden = true,
+              float_opts = {
+                border = 'curved'
+              }
+            })
+          end
+          _G.float_term:toggle()
         end
       '';
       options.desc = "Toggle terminal";
