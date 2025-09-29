@@ -313,6 +313,28 @@
       options.desc = "Git browse (open)";
     }
 
+    # Diffview keymaps
+    {
+      key = "<leader>gd";
+      action = "<cmd>DiffviewOpen<CR>";
+      options.desc = "Open Diffview";
+    }
+    {
+      key = "<leader>gh";
+      action = "<cmd>DiffviewFileHistory<CR>";
+      options.desc = "File history";
+    }
+    {
+      key = "<leader>gH";
+      action = "<cmd>DiffviewFileHistory %<CR>";
+      options.desc = "Current file history";
+    }
+    {
+      key = "<leader>gq";
+      action = "<cmd>DiffviewClose<CR>";
+      options.desc = "Close Diffview";
+    }
+
     # Search and Replace (Spectre)
     {
       key = "<leader>sr";
@@ -878,6 +900,10 @@
     };
 
     fugitive.enable = true;
+
+    diffview = {
+      enable = true;
+    };
 
     nvim-autopairs.enable = true;
 
