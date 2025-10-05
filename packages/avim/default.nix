@@ -24,13 +24,13 @@ let
     exec ${nvim}/bin/nvim "$@"
   '';
 
-  package = avimWrapper // {
+  package = avimWrapper.overrideAttrs (old: {
     inherit version;
-    meta = {
+    meta = (old.meta or {}) // {
       description = "Avim - Custom Neovim configuration";
       homepage = "https://github.com/aldoborrero/astronvim.nix";
       license = lib.licenses.mit;
     };
-  };
+  });
 in
 package
