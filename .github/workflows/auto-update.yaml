@@ -4,7 +4,7 @@ name: Automatic Update
 on:
   # Run weekly on Sunday at 00:00 UTC
   schedule:
-    - cron: '0 0 * * 0'
+    - cron: "0 0 * * 0"
 
   # Allow manual trigger
   workflow_dispatch:
@@ -97,7 +97,6 @@ jobs:
           PR_LABELS: "dependencies,automated,scheduled-update"
           AUTO_MERGE: ${{ inputs.auto-merge }}
         run: |
-          # The script should be available from the checkout
           .github/actions/create-pr.sh \
             "${{ matrix.type }}" \
             "${{ matrix.name }}" \
