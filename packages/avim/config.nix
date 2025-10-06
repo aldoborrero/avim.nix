@@ -52,6 +52,21 @@
   };
 
   keymaps = [
+    # Exit
+    {
+      key = "<leader>q";
+      action = "<cmd>confirm qa<CR>";
+      options.desc = "Quit Neovim";
+    }
+
+    # Escape with jk
+    {
+      mode = "i";
+      key = "jk";
+      action = "<Esc>";
+      options.desc = "Exit insert mode";
+    }
+
     # Navigation
     {
       key = "<C-h>";
@@ -1356,6 +1371,8 @@
             fF = "find_all_files_in_dir",
             fw = "find_words_in_dir",
             fW = "find_all_words_in_dir",
+            h = "parent_or_close",
+            l = "child_or_open",
           },
         },
       },
