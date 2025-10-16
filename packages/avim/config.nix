@@ -200,11 +200,6 @@
       options.desc = "Find words in all files";
     }
     {
-      key = "<leader>fa";
-      action.__raw = ''function() require("snacks").picker.files { dirs = { vim.fn.stdpath "config" }, desc = "Config Files" } end'';
-      options.desc = "Find config files";
-    }
-    {
       key = "<leader>fb";
       action.__raw = "function() require('snacks').picker.buffers() end";
       options.desc = "Find buffers";
@@ -390,6 +385,43 @@
       options.desc = "Toggle zen mode";
     }
 
+    # Quick Actions
+    {
+      key = "<leader>xr";
+      action = "<cmd>checktime<CR>";
+      options.desc = "Reload file from disk";
+    }
+    {
+      key = "<leader>xc";
+      action = "<cmd>%y+<CR>";
+      options.desc = "Copy entire buffer to clipboard";
+    }
+    {
+      key = "<leader>xs";
+      action = "<cmd>write<CR>";
+      options.desc = "Save file";
+    }
+    {
+      key = "<leader>xS";
+      action = "<cmd>wall<CR>";
+      options.desc = "Save all files";
+    }
+    {
+      key = "<leader>xw";
+      action = "<cmd>set wrap!<CR>";
+      options.desc = "Toggle word wrap";
+    }
+    {
+      key = "<leader>xp";
+      action = "<cmd>echo expand('%:p')<CR>";
+      options.desc = "Show full file path";
+    }
+    {
+      key = "<leader>xe";
+      action = "<cmd>!chmod +x %<CR>";
+      options.desc = "Make file executable";
+    }
+
     # Flash navigation
     {
       key = "s";
@@ -451,19 +483,7 @@
       options.desc = "Search todo comments";
     }
 
-    # LSP with Snacks
-    {
-      key = "<leader>lD";
-      action.__raw = "function() require('snacks').picker.diagnostics() end";
-      options.desc = "Search diagnostics";
-    }
-    {
-      key = "<leader>ls";
-      action.__raw = "function() require('snacks').picker.lsp_symbols() end";
-      options.desc = "Search symbols";
-    }
-
-    # LSP
+    # LSP Navigation (standard conventions)
     {
       key = "gd";
       action = "<cmd>lua vim.lsp.buf.definition()<CR>";
@@ -485,10 +505,29 @@
       options.desc = "Show references";
     }
     {
+      key = "gt";
+      action = "<cmd>lua vim.lsp.buf.type_definition()<CR>";
+      options.desc = "Go to type definition";
+    }
+    {
       key = "K";
       action = "<cmd>lua vim.lsp.buf.hover()<CR>";
       options.desc = "Hover documentation";
     }
+
+    # Diagnostic Navigation
+    {
+      key = "]d";
+      action = "<cmd>lua vim.diagnostic.goto_next()<CR>";
+      options.desc = "Next diagnostic";
+    }
+    {
+      key = "[d";
+      action = "<cmd>lua vim.diagnostic.goto_prev()<CR>";
+      options.desc = "Previous diagnostic";
+    }
+
+    # LSP Actions
     {
       key = "<leader>la";
       action = "<cmd>lua vim.lsp.buf.code_action()<CR>";
@@ -510,6 +549,45 @@
       action.__raw = "function() require('conform').format({ async = true, lsp_fallback = true, range = { start = vim.api.nvim_buf_get_mark(0, '<'), ['end'] = vim.api.nvim_buf_get_mark(0, '>') } }) end";
       options.desc = "Format selection";
     }
+    {
+      key = "<leader>lh";
+      action = "<cmd>lua vim.lsp.buf.signature_help()<CR>";
+      options.desc = "Signature help";
+    }
+
+    # LSP Info and Management
+    {
+      key = "<leader>li";
+      action = "<cmd>LspInfo<CR>";
+      options.desc = "LSP info";
+    }
+    {
+      key = "<leader>lR";
+      action = "<cmd>LspRestart<CR>";
+      options.desc = "Restart LSP";
+    }
+
+    # LSP Search and Diagnostics
+    {
+      key = "<leader>lD";
+      action.__raw = "function() require('snacks').picker.diagnostics() end";
+      options.desc = "Search diagnostics";
+    }
+    {
+      key = "<leader>lw";
+      action.__raw = "function() require('snacks').picker.lsp_symbols() end";
+      options.desc = "Workspace symbols";
+    }
+    {
+      key = "<leader>ld";
+      action = "<cmd>lua vim.diagnostic.open_float()<CR>";
+      options.desc = "Show line diagnostics";
+    }
+    {
+      key = "<leader>lq";
+      action = "<cmd>lua vim.diagnostic.setloclist()<CR>";
+      options.desc = "Diagnostic quickfix";
+    }
 
     # Terminal and AI
     {
@@ -518,12 +596,27 @@
       options.desc = "Open Claude Code";
     }
     {
-      key = "<F5>";
+      key = "<S-F4>";
       action = "<cmd>ClaudeCodeContinue<CR>";
       options.desc = "Continue Claude Code conversation";
     }
     {
+      key = "<F5>";
+      action.__raw = "function() require('opencode').toggle() end";
+      options.desc = "Toggle OpenCode";
+    }
+    {
+      key = "<C-.>";
+      action.__raw = "function() require('opencode').toggle() end";
+      options.desc = "Toggle OpenCode";
+    }
+    {
       key = "<F6>";
+      action = "<cmd>lua require('toggleterm.terminal').Terminal:new({ cmd = 'lazygit' }):toggle()<CR>";
+      options.desc = "Open LazyGit";
+    }
+    {
+      key = "<F9>";
       action = "<cmd>lua require('toggleterm.terminal').Terminal:new({ cmd = 'lazygit' }):toggle()<CR>";
       options.desc = "Open LazyGit";
     }
@@ -1118,6 +1211,10 @@
             __unkeyed-1 = "<leader>h";
             group = "Harpoon";
           }
+          {
+            __unkeyed-1 = "<leader>x";
+            group = "Quick Actions";
+          }
         ];
       };
     };
@@ -1268,6 +1365,8 @@
         notify_on_error = true;
       };
     };
+
+    opencode.enable = true;
   };
 
   # Extra configuration

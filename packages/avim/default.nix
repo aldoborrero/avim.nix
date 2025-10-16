@@ -26,7 +26,7 @@ let
 
   package = avimWrapper.overrideAttrs (old: {
     inherit version;
-    meta = (old.meta or {}) // {
+    meta = (old.meta or { }) // {
       description = "Avim - Custom Neovim configuration";
       homepage = "https://github.com/aldoborrero/astronvim.nix";
       license = lib.licenses.mit;
