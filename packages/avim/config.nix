@@ -54,9 +54,16 @@
   keymaps = [
     # Exit
     {
-      key = "<leader>q";
+      key = "<leader>qq";
       action = "<cmd>confirm qa<CR>";
       options.desc = "Quit Neovim";
+    }
+
+    # New file
+    {
+      key = "<leader>n";
+      action = "<cmd>enew<CR>";
+      options.desc = "New file";
     }
 
     # Escape with jk
@@ -160,6 +167,28 @@
         end
       '';
       options.desc = "Home Screen";
+    }
+
+    # Session management
+    {
+      key = "<leader>qs";
+      action.__raw = "function() require('persistence').save() end";
+      options.desc = "Save session";
+    }
+    {
+      key = "<leader>ql";
+      action.__raw = "function() require('persistence').load() end";
+      options.desc = "Load last session";
+    }
+    {
+      key = "<leader>qd";
+      action.__raw = "function() require('persistence').stop() end";
+      options.desc = "Stop session tracking";
+    }
+    {
+      key = "<leader>qr";
+      action.__raw = "function() require('persistence').load({ last = true }) end";
+      options.desc = "Restore last session";
     }
 
     # Snacks picker keymaps
@@ -368,6 +397,19 @@
       options.desc = "Search in current file";
     }
 
+    # Comments
+    {
+      key = "<leader>/";
+      action.__raw = "function() require('Comment.api').toggle.linewise.current() end";
+      options.desc = "Toggle comment";
+    }
+    {
+      mode = "v";
+      key = "<leader>/";
+      action.__raw = "function() require('Comment.api').toggle.linewise(vim.fn.visualmode()) end";
+      options.desc = "Toggle comment";
+    }
+
     # Snacks utilities
     {
       key = "<leader>u|";
@@ -383,6 +425,17 @@
       key = "<leader>uZ";
       action.__raw = "function() require('snacks').toggle.zen():toggle() end";
       options.desc = "Toggle zen mode";
+    }
+    {
+      key = "<leader>uf";
+      action.__raw = ''
+        function()
+          vim.g.disable_autoformat = not vim.g.disable_autoformat
+          local status = vim.g.disable_autoformat and "disabled" or "enabled"
+          vim.notify("Auto-format " .. status)
+        end
+      '';
+      options.desc = "Toggle auto-format";
     }
 
     # Quick Actions
@@ -501,7 +554,7 @@
     }
     {
       key = "gr";
-      action = "<cmd>Telescope lsp_references<CR>";
+      action.__raw = "function() require('snacks').picker.lsp_references() end";
       options.desc = "Show references";
     }
     {
@@ -528,6 +581,21 @@
     }
 
     # LSP Actions
+    {
+      key = "gp";
+      action.__raw = ''
+        function()
+          local params = vim.lsp.util.make_position_params()
+          return vim.lsp.buf_request(0, 'textDocument/definition', params, function(_, result)
+            if result == nil or vim.tbl_isempty(result) then
+              return nil
+            end
+            vim.lsp.util.preview_location(result[1])
+          end)
+        end
+      '';
+      options.desc = "Preview definition";
+    }
     {
       key = "<leader>la";
       action = "<cmd>lua vim.lsp.buf.code_action()<CR>";
@@ -609,11 +677,6 @@
       key = "<C-.>";
       action.__raw = "function() require('opencode').toggle() end";
       options.desc = "Toggle OpenCode";
-    }
-    {
-      key = "<F6>";
-      action = "<cmd>lua require('toggleterm.terminal').Terminal:new({ cmd = 'lazygit' }):toggle()<CR>";
-      options.desc = "Open LazyGit";
     }
     {
       key = "<F9>";
@@ -1094,7 +1157,7 @@
               }
               {
                 key = "s";
-                action = "<Leader>Sl";
+                action = "<Leader>ql";
                 desc = "Last Session  ";
               }
             ];
@@ -1192,8 +1255,12 @@
             group = "Find";
           }
           {
-            __unkeyed-1 = "<leader>c";
-            group = "Code";
+            __unkeyed-1 = "<leader>s";
+            group = "Search";
+          }
+          {
+            __unkeyed-1 = "<leader>q";
+            group = "Session/Quit";
           }
           {
             __unkeyed-1 = "<leader>g";
@@ -1315,6 +1382,10 @@
       enableTelescope = false;
     };
 
+    persistence = {
+      enable = true;
+    };
+
     claude-code = {
       enable = true;
       settings = {
@@ -1358,9 +1429,14 @@
           yaml = [ "prettier" ];
           "_" = [ "trim_whitespace" ];
         };
-        format_after_save = {
-          lsp_fallback = true;
-        };
+        format_after_save.__raw = ''
+          function(bufnr)
+            if vim.g.disable_autoformat then
+              return
+            end
+            return { lsp_fallback = true }
+          end
+        '';
         log_level = "warn";
         notify_on_error = true;
       };
@@ -1372,10 +1448,6 @@
   # Extra configuration
   extraConfigLua = ''
     -- Additional Lua configuration can go here
-
-    -- Set up additional keymaps or plugin configurations
-    vim.api.nvim_set_keymap('n', '<leader>/', '<cmd>lua require("Comment.api").toggle.linewise.current()<CR>', { noremap = true, silent = true, desc = "Toggle comment" })
-    vim.api.nvim_set_keymap('v', '<leader>/', '<esc><cmd>lua require("Comment.api").toggle.linewise(vim.fn.visualmode())<CR>', { noremap = true, silent = true, desc = "Toggle comment" })
 
     -- Custom Neo-tree commands
     require("neo-tree").setup({
