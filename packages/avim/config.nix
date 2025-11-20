@@ -46,6 +46,11 @@
     updatetime = 50;
     timeoutlen = 300;
 
+    # Modern features
+    splitkeep = "screen";
+    jumpoptions = "stack";
+    diffopt = "internal,filler,closeoff,linematch:60";
+
     # Splits
     splitbelow = true;
     splitright = true;
@@ -111,7 +116,7 @@
     # Save
     {
       key = "<C-s>";
-      action = "<cmd>w<CR>";
+      action = "<cmd>write<CR>";
       options.desc = "Save file";
     }
 
@@ -445,18 +450,18 @@
       options.desc = "Reload file from disk";
     }
     {
-      key = "<leader>xc";
+      key = "<leader>xy";
       action = "<cmd>%y+<CR>";
       options.desc = "Copy entire buffer to clipboard";
     }
     {
       key = "<leader>xs";
-      action = "<cmd>write<CR>";
+      action = "<cmd>w<CR>";
       options.desc = "Save file";
     }
     {
       key = "<leader>xS";
-      action = "<cmd>wall<CR>";
+      action = "<cmd>wa<CR>";
       options.desc = "Save all files";
     }
     {
@@ -1018,29 +1023,31 @@
 
     neo-tree = {
       enable = true;
-      closeIfLastWindow = true;
-      enableGitStatus = true;
-      enableDiagnostics = true;
-      sources = [
-        "filesystem"
-        "buffers"
-        "git_status"
-      ];
-      sourceSelector = {
-        winbar = true;
-        contentLayout = "center";
-      };
-      window = {
-        width = 30;
-      };
-      filesystem = {
-        followCurrentFile = {
-          enabled = true;
+      settings = {
+        close_if_last_window = true;
+        enable_git_status = true;
+        enable_diagnostics = true;
+        sources = [
+          "filesystem"
+          "buffers"
+          "git_status"
+        ];
+        source_selector = {
+          winbar = true;
+          content_layout = "center";
         };
-        hijackNetrwBehavior = "open_current";
-        useLibuvFileWatcher = true;
-        filteredItems = {
-          hideGitignored = true;
+        window = {
+          width = 30;
+        };
+        filesystem = {
+          follow_current_file = {
+            enabled = true;
+          };
+          hijack_netrw_behavior = "open_current";
+          use_libuv_file_watcher = true;
+          filtered_items = {
+            hide_gitignored = true;
+          };
         };
       };
     };
@@ -1447,8 +1454,6 @@
 
   # Extra configuration
   extraConfigLua = ''
-    -- Additional Lua configuration can go here
-
     -- Custom Neo-tree commands
     require("neo-tree").setup({
       commands = {
