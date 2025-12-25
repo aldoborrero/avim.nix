@@ -824,33 +824,34 @@
   plugins = {
     treesitter = {
       enable = true;
+      nixGrammars = true;
       settings = {
         highlight.enable = true;
         indent.enable = true;
-        ensure_installed = [
-          "bash"
-          "c"
-          "cpp"
-          "css"
-          "dockerfile"
-          "go"
-          "hcl"
-          "html"
-          "javascript"
-          "json"
-          "lua"
-          "markdown"
-          "nix"
-          "python"
-          "rust"
-          "terraform"
-          "toml"
-          "typescript"
-          "vim"
-          "vimdoc"
-          "yaml"
-        ];
       };
+      grammarPackages = with pkgs.vimPlugins.nvim-treesitter.builtGrammars; [
+        bash
+        c
+        cpp
+        css
+        dockerfile
+        go
+        hcl
+        html
+        javascript
+        json
+        lua
+        markdown
+        nix
+        python
+        rust
+        terraform
+        toml
+        typescript
+        vim
+        vimdoc
+        yaml
+      ];
     };
 
     lsp = {
