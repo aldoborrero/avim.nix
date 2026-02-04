@@ -724,7 +724,22 @@
     {
       mode = "t";
       key = "<F7>";
-      action = "<cmd>ToggleTerm<CR>";
+      action.__raw = ''
+        function()
+          local Terminal = require('toggleterm.terminal').Terminal
+          if not _G.float_term then
+            _G.float_term = Terminal:new({
+              count = 1,
+              direction = 'float',
+              hidden = true,
+              float_opts = {
+                border = 'curved'
+              }
+            })
+          end
+          _G.float_term:toggle()
+        end
+      '';
       options.desc = "Toggle terminal from terminal mode";
     }
 
