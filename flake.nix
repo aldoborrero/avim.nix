@@ -29,7 +29,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     pi-agent-nvim = {
-      url = "path:/home/aldo/Dev/aldoborrero/pi-agent.nvim";
+      url = "github:aldoborrero/pi-agent.nvim";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };

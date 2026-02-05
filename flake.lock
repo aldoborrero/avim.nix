@@ -157,14 +157,17 @@
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
-        "lastModified": 1770247683,
-        "narHash": "sha256-ZKUHGyumRLnbIyOYVSfUbOUgC6K6sLh8SFbsLrFz0cE=",
-        "path": "/home/aldo/Dev/aldoborrero/pi-agent.nvim",
-        "type": "path"
+        "lastModified": 1770284403,
+        "narHash": "sha256-ppyiPt0NcWTAWZbpCCnqbUCJx99Rdd4khBRjj4lltS0=",
+        "owner": "aldoborrero",
+        "repo": "pi-agent.nvim",
+        "rev": "6d3d735557e2ba8eb0571d61a9ff0ea222fef16d",
+        "type": "github"
       },
       "original": {
-        "path": "/home/aldo/Dev/aldoborrero/pi-agent.nvim",
-        "type": "path"
+        "owner": "aldoborrero",
+        "repo": "pi-agent.nvim",
+        "type": "github"
       }
     },
     "root": {
