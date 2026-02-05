@@ -10,7 +10,7 @@ let
 
   nvim = inputs.nixvim.legacyPackages.${pkgs.system}.makeNixvimWithModule {
     inherit pkgs;
-    module = import ./config.nix;
+    module = import ./config.nix { inherit pkgs inputs; };
   };
 
   avimWrapper = writeShellScriptBin "avim" ''

@@ -1,13 +1,15 @@
-{ pkgs, ... }:
+{ pkgs, inputs }:
 {
-  colorschemes.catppuccin = {
-    enable = true;
-  };
+  imports = [
+    inputs.pi-agent-nvim.modules.nixvim.default
+  ];
 
   globals = {
     mapleader = " ";
     maplocalleader = ",";
   };
+
+  colorschemes.catppuccin.enable = true;
 
   opts = {
     # Line numbers
@@ -904,7 +906,6 @@
       settings = {
         keymap = {
           preset = "default";
-          # Custom keymaps
           "<C-b>" = [
             "scroll_documentation_up"
             "fallback"
@@ -926,11 +927,11 @@
             "accept"
             "fallback"
           ];
-          "<Tab>" = [
+          "<C-k>" = [
             "select_next"
             "fallback"
           ];
-          "<S-Tab>" = [
+          "<C-j>" = [
             "select_prev"
             "fallback"
           ];
@@ -946,30 +947,27 @@
             lsp = {
               name = "LSP";
               module = "blink.cmp.sources.lsp";
-              fallbacks = [ "buffer" ];
+              score_offset = 1;
             };
             path = {
               name = "Path";
               module = "blink.cmp.sources.path";
-              score_offset = 3;
+              score_offset = 2;
             };
             snippets = {
               name = "Snippets";
               module = "blink.cmp.sources.snippets";
-              score_offset = -3;
+              score_offset = 3;
             };
             buffer = {
               name = "Buffer";
               module = "blink.cmp.sources.buffer";
+              score_offset = 4;
             };
           };
         };
         completion = {
-          accept = {
-            auto_brackets = {
-              enabled = true;
-            };
-          };
+          accept.auto_brackets.enabled = true;
           menu = {
             draw = {
               columns = [
@@ -990,9 +988,7 @@
           };
         };
         fuzzy = {
-          prebuilt_binaries = {
-            download = true;
-          };
+          prebuilt_binaries.download = true;
         };
         snippets = {
           expand.__raw = "function(snippet) require('luasnip').lsp_expand(snippet) end";
@@ -1095,9 +1091,7 @@
 
     fugitive.enable = true;
 
-    diffview = {
-      enable = true;
-    };
+    diffview.enable = true;
 
     nvim-autopairs.enable = true;
 
@@ -1311,9 +1305,7 @@
 
     auto-save = {
       enable = true;
-      settings = {
-        enabled = true;
-      };
+      settings.enabled = true;
     };
 
     rainbow-delimiters.enable = true;
@@ -1332,9 +1324,7 @@
 
     undotree = {
       enable = true;
-      settings = {
-        SetFocusWhenToggle = true;
-      };
+      settings.SetFocusWhenToggle = true;
     };
 
     todo-comments = {
@@ -1421,9 +1411,17 @@
       };
     };
 
-    spectre = {
+    pi-agent = {
       enable = true;
+      settings = {
+        window = {
+          split_ratio = 0.4;
+          position = "botright";
+        };
+      };
     };
+
+    spectre.enable = true;
 
     conform-nvim = {
       enable = true;
