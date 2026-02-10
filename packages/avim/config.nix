@@ -664,56 +664,67 @@
       options.desc = "Diagnostic quickfix";
     }
 
-    # Terminal and AI
-    {
-      key = "<F4>";
-      action = "<cmd>ClaudeCode<CR>";
-      options.desc = "Open Claude Code";
-    }
-    {
-      key = "<S-F4>";
-      action = "<cmd>ClaudeCodeContinue<CR>";
-      options.desc = "Continue Claude Code conversation";
-    }
+    # AI Tools (F5-F8)
     {
       key = "<F5>";
+      action = "<cmd>ClaudeCode<CR>";
+      options.desc = "Toggle Claude Code";
+    }
+    {
+      key = "<F17>";
+      action = "<cmd>ClaudeCodeContinue<CR>";
+      options.desc = "Continue Claude Code (Shift+F5)";
+    }
+    {
+      key = "<F6>";
+      action = "<cmd>PiAgent<CR>";
+      options.desc = "Toggle Pi Agent";
+    }
+    {
+      key = "<F18>";
+      action = "<cmd>PiAgentContinue<CR>";
+      options.desc = "Continue Pi Agent (Shift+F6)";
+    }
+    {
+      key = "<F7>";
       action.__raw = "function() require('opencode').toggle() end";
       options.desc = "Toggle OpenCode";
     }
     {
-      key = "<C-.>";
-      action.__raw = "function() require('opencode').toggle() end";
-      options.desc = "Toggle OpenCode";
+      key = "<F8>";
+      action.__raw = ''
+        function()
+          local Terminal = require('toggleterm.terminal').Terminal
+          if not _G.codex_term then
+            _G.codex_term = Terminal:new({
+              cmd = 'codex',
+              count = 8,
+              direction = 'float',
+              hidden = true,
+              float_opts = { border = 'curved' }
+            })
+          end
+          _G.codex_term:toggle()
+        end
+      '';
+      options.desc = "Toggle Codex";
     }
     {
-      key = "<F9>";
-      action = "<cmd>lua require('toggleterm.terminal').Terminal:new({ cmd = 'lazygit' }):toggle()<CR>";
-      options.desc = "Open LazyGit";
+      mode = "t";
+      key = "<F8>";
+      action.__raw = ''
+        function()
+          if _G.codex_term then _G.codex_term:toggle() end
+        end
+      '';
+      options.desc = "Toggle Codex";
     }
+
+    # Git
     {
       key = "<leader>gg";
       action = "<cmd>lua require('toggleterm.terminal').Terminal:new({ cmd = 'lazygit' }):toggle()<CR>";
       options.desc = "Open LazyGit";
-    }
-    {
-      key = "<F7>";
-      action.__raw = ''
-        function()
-          local Terminal = require('toggleterm.terminal').Terminal
-          if not _G.float_term then
-            _G.float_term = Terminal:new({
-              count = 1,
-              direction = 'float',
-              hidden = true,
-              float_opts = {
-                border = 'curved'
-              }
-            })
-          end
-          _G.float_term:toggle()
-        end
-      '';
-      options.desc = "Toggle terminal";
     }
 
     # Terminal mode mappings
@@ -723,26 +734,99 @@
       action = "<C-\\><C-n>";
       options.desc = "Exit terminal mode";
     }
+
+    # Dedicated terminals F9-F12
     {
-      mode = "t";
-      key = "<F7>";
+      key = "<F9>";
       action.__raw = ''
         function()
           local Terminal = require('toggleterm.terminal').Terminal
-          if not _G.float_term then
-            _G.float_term = Terminal:new({
-              count = 1,
-              direction = 'float',
-              hidden = true,
-              float_opts = {
-                border = 'curved'
-              }
-            })
+          if not _G.term_9 then
+            _G.term_9 = Terminal:new({ count = 9, direction = 'float', hidden = true, float_opts = { border = 'curved' } })
           end
-          _G.float_term:toggle()
+          _G.term_9:toggle()
         end
       '';
-      options.desc = "Toggle terminal from terminal mode";
+      options.desc = "Toggle terminal 1";
+    }
+    {
+      mode = "t";
+      key = "<F9>";
+      action.__raw = ''
+        function()
+          if _G.term_9 then _G.term_9:toggle() end
+        end
+      '';
+      options.desc = "Toggle terminal 1";
+    }
+    {
+      key = "<F10>";
+      action.__raw = ''
+        function()
+          local Terminal = require('toggleterm.terminal').Terminal
+          if not _G.term_10 then
+            _G.term_10 = Terminal:new({ count = 10, direction = 'float', hidden = true, float_opts = { border = 'curved' } })
+          end
+          _G.term_10:toggle()
+        end
+      '';
+      options.desc = "Toggle terminal 2";
+    }
+    {
+      mode = "t";
+      key = "<F10>";
+      action.__raw = ''
+        function()
+          if _G.term_10 then _G.term_10:toggle() end
+        end
+      '';
+      options.desc = "Toggle terminal 2";
+    }
+    {
+      key = "<F11>";
+      action.__raw = ''
+        function()
+          local Terminal = require('toggleterm.terminal').Terminal
+          if not _G.term_11 then
+            _G.term_11 = Terminal:new({ count = 11, direction = 'float', hidden = true, float_opts = { border = 'curved' } })
+          end
+          _G.term_11:toggle()
+        end
+      '';
+      options.desc = "Toggle terminal 3";
+    }
+    {
+      mode = "t";
+      key = "<F11>";
+      action.__raw = ''
+        function()
+          if _G.term_11 then _G.term_11:toggle() end
+        end
+      '';
+      options.desc = "Toggle terminal 3";
+    }
+    {
+      key = "<F12>";
+      action.__raw = ''
+        function()
+          local Terminal = require('toggleterm.terminal').Terminal
+          if not _G.term_12 then
+            _G.term_12 = Terminal:new({ count = 12, direction = 'float', hidden = true, float_opts = { border = 'curved' } })
+          end
+          _G.term_12:toggle()
+        end
+      '';
+      options.desc = "Toggle terminal 4";
+    }
+    {
+      mode = "t";
+      key = "<F12>";
+      action.__raw = ''
+        function()
+          if _G.term_12 then _G.term_12:toggle() end
+        end
+      '';
+      options.desc = "Toggle terminal 4";
     }
 
     # Harpoon keymaps
@@ -835,6 +919,44 @@
       key = "<leader>hc";
       action.__raw = "function() require'harpoon':list():clear() end";
       options.desc = "Clear all Harpoon marks";
+    }
+
+    # Luasnip navigation
+    {
+      mode = [
+        "i"
+        "s"
+      ];
+      key = "<C-l>";
+      action.__raw = ''
+        function()
+          if require("luasnip").jumpable(1) then
+            require("luasnip").jump(1)
+          end
+        end
+      '';
+      options = {
+        silent = true;
+        desc = "Luasnip jump next";
+      };
+    }
+    {
+      mode = [
+        "i"
+        "s"
+      ];
+      key = "<C-h>";
+      action.__raw = ''
+        function()
+          if require("luasnip").jumpable(-1) then
+            require("luasnip").jump(-1)
+          end
+        end
+      '';
+      options = {
+        silent = true;
+        desc = "Luasnip jump prev";
+      };
     }
   ];
 
@@ -1051,6 +1173,88 @@
         window = {
           width = 30;
         };
+        commands.__raw = ''
+          {
+            find_files_in_dir = function(state)
+              local node = state.tree:get_node()
+              local path = node.type == "file" and node:get_parent_id() or node:get_id()
+              require("snacks").picker.files { cwd = path }
+            end,
+            find_all_files_in_dir = function(state)
+              local node = state.tree:get_node()
+              local path = node.type == "file" and node:get_parent_id() or node:get_id()
+              require("snacks").picker.files { cwd = path, hidden = true, ignored = true }
+            end,
+            find_words_in_dir = function(state)
+              local node = state.tree:get_node()
+              local path = node.type == "file" and node:get_parent_id() or node:get_id()
+              require("snacks").picker.grep { cwd = path }
+            end,
+            find_all_words_in_dir = function(state)
+              local node = state.tree:get_node()
+              local path = node.type == "file" and node:get_parent_id() or node:get_id()
+              require("snacks").picker.grep { cwd = path, hidden = true, ignored = true }
+            end,
+            system_open = function(state)
+              vim.ui.open(state.tree:get_node():get_id())
+            end,
+            parent_or_close = function(state)
+              local node = state.tree:get_node()
+              if node:has_children() and node:is_expanded() then
+                state.commands.toggle_node(state)
+              else
+                require("neo-tree.ui.renderer").focus_node(state, node:get_parent_id())
+              end
+            end,
+            child_or_open = function(state)
+              local node = state.tree:get_node()
+              if node:has_children() then
+                if not node:is_expanded() then
+                  state.commands.toggle_node(state)
+                else
+                  if node.type == "file" then
+                    state.commands.open(state)
+                  else
+                    require("neo-tree.ui.renderer").focus_node(state, node:get_child_ids()[1])
+                  end
+                end
+              else
+                state.commands.open(state)
+              end
+            end,
+            copy_selector = function(state)
+              local node = state.tree:get_node()
+              local filepath = node:get_id()
+              local filename = node.name
+              local modify = vim.fn.fnamemodify
+              local vals = {
+                ["BASENAME"] = modify(filename, ":r"),
+                ["EXTENSION"] = modify(filename, ":e"),
+                ["FILENAME"] = filename,
+                ["PATH (CWD)"] = modify(filepath, ":."),
+                ["PATH (HOME)"] = modify(filepath, ":~"),
+                ["PATH"] = filepath,
+                ["URI"] = vim.uri_from_fname(filepath),
+              }
+              local options = vim.tbl_filter(function(val) return vals[val] ~= "" end, vim.tbl_keys(vals))
+              if vim.tbl_isempty(options) then
+                vim.notify("No values to copy", vim.log.levels.WARN)
+                return
+              end
+              table.sort(options)
+              vim.ui.select(options, {
+                prompt = "Choose to copy to clipboard:",
+                format_item = function(item) return ("%s: %s"):format(item, vals[item]) end,
+              }, function(choice)
+                local result = vals[choice]
+                if result then
+                  vim.notify(("Copied: `%s`"):format(result))
+                  vim.fn.setreg("+", result)
+                end
+              end)
+            end,
+          }
+        '';
         filesystem = {
           follow_current_file = {
             enabled = true;
@@ -1059,6 +1263,18 @@
           use_libuv_file_watcher = true;
           filtered_items = {
             hide_gitignored = true;
+          };
+          window = {
+            mappings = {
+              f.__raw = ''{ "show_help", nowait = false, config = { title = "Find Files", prefix_key = "f" } }'';
+              "f/" = "filter_on_submit";
+              ff = "find_files_in_dir";
+              fF = "find_all_files_in_dir";
+              fw = "find_words_in_dir";
+              fW = "find_all_words_in_dir";
+              h = "parent_or_close";
+              l = "child_or_open";
+            };
           };
         };
       };
@@ -1466,128 +1682,17 @@
     opencode.enable = true;
   };
 
-  # Extra configuration
-  extraConfigLua = ''
-    -- Custom Neo-tree commands
-    require("neo-tree").setup({
-      commands = {
-        find_files_in_dir = function(state)
-          local node = state.tree:get_node()
-          local path = node.type == "file" and node:get_parent_id() or node:get_id()
-          require("snacks").picker.files { cwd = path }
-        end,
-        find_all_files_in_dir = function(state)
-          local node = state.tree:get_node()
-          local path = node.type == "file" and node:get_parent_id() or node:get_id()
-          require("snacks").picker.files { cwd = path, hidden = true, ignored = true }
-        end,
-        find_words_in_dir = function(state)
-          local node = state.tree:get_node()
-          local path = node.type == "file" and node:get_parent_id() or node:get_id()
-          require("snacks").picker.grep { cwd = path }
-        end,
-        find_all_words_in_dir = function(state)
-          local node = state.tree:get_node()
-          local path = node.type == "file" and node:get_parent_id() or node:get_id()
-          require("snacks").picker.grep { cwd = path, hidden = true, ignored = true }
-        end,
-        system_open = function(state)
-          vim.ui.open(state.tree:get_node():get_id())
-        end,
-        parent_or_close = function(state)
-          local node = state.tree:get_node()
-          if node:has_children() and node:is_expanded() then
-            state.commands.toggle_node(state)
-          else
-            require("neo-tree.ui.renderer").focus_node(state, node:get_parent_id())
-          end
-        end,
-        child_or_open = function(state)
-          local node = state.tree:get_node()
-          if node:has_children() then
-            if not node:is_expanded() then -- if unexpanded, expand
-              state.commands.toggle_node(state)
-            else -- if expanded and has children, select the next child
-              if node.type == "file" then
-                state.commands.open(state)
-              else
-                require("neo-tree.ui.renderer").focus_node(state, node:get_child_ids()[1])
-              end
-            end
-          else -- if has no children
-            state.commands.open(state)
-          end
-        end,
-        copy_selector = function(state)
-          local node = state.tree:get_node()
-          local filepath = node:get_id()
-          local filename = node.name
-          local modify = vim.fn.fnamemodify
-
-          local vals = {
-            ["BASENAME"] = modify(filename, ":r"),
-            ["EXTENSION"] = modify(filename, ":e"),
-            ["FILENAME"] = filename,
-            ["PATH (CWD)"] = modify(filepath, ":."),
-            ["PATH (HOME)"] = modify(filepath, ":~"),
-            ["PATH"] = filepath,
-            ["URI"] = vim.uri_from_fname(filepath),
-          }
-
-          local options = vim.tbl_filter(function(val) return vals[val] ~= "" end, vim.tbl_keys(vals))
-          if vim.tbl_isempty(options) then
-            vim.notify("No values to copy", vim.log.levels.WARN)
-            return
-          end
-          table.sort(options)
-          vim.ui.select(options, {
-            prompt = "Choose to copy to clipboard:",
-            format_item = function(item) return ("%s: %s"):format(item, vals[item]) end,
-          }, function(choice)
-            local result = vals[choice]
-            if result then
-              vim.notify(("Copied: `%s`"):format(result))
-              vim.fn.setreg("+", result)
-            end
-          end)
-        end,
-      },
-      filesystem = {
-        window = {
-          mappings = {
-            f = { "show_help", nowait = false, config = { title = "Find Files", prefix_key = "f" } },
-            ["f/"] = "filter_on_submit",
-            ff = "find_files_in_dir",
-            fF = "find_all_files_in_dir",
-            fw = "find_words_in_dir",
-            fW = "find_all_words_in_dir",
-            h = "parent_or_close",
-            l = "child_or_open",
-          },
-        },
-      },
-    })
-
-    -- Neo-tree event handlers
-    vim.api.nvim_create_autocmd("FileType", {
-      pattern = "neo-tree",
-      callback = function()
-        vim.opt_local.signcolumn = "auto"
-        vim.opt_local.foldcolumn = "0"
-      end,
-    })
-    -- Luasnip keymaps for jumping in snippets
-    vim.keymap.set({"i", "s"}, "<C-j>", function()
-      if require("luasnip").jumpable(1) then
-        require("luasnip").jump(1)
-      end
-    end, { silent = true })
-
-    vim.keymap.set({"i", "s"}, "<C-k>", function()
-      if require("luasnip").jumpable(-1) then
-        require("luasnip").jump(-1)
-      end
-    end, { silent = true })
-
-  '';
+  # Autocommands
+  autoCmd = [
+    {
+      event = "FileType";
+      pattern = "neo-tree";
+      callback.__raw = ''
+        function()
+          vim.opt_local.signcolumn = "auto"
+          vim.opt_local.foldcolumn = "0"
+        end
+      '';
+    }
+  ];
 }
