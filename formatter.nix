@@ -4,7 +4,6 @@ inputs.treefmt-nix.lib.mkWrapper pkgs {
   programs = {
     deadnix.enable = true;
     hclfmt.enable = true;
-    mdformat.enable = true;
     nixfmt.enable = true;
     shfmt.enable = true;
     statix.enable = true;
