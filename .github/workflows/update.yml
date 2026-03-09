@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+
+name: Update Dependencies
+on:
+  schedule:
+    # Run nightly at 2 AM UTC
+    - cron: "0 2 * * *"
+  workflow_dispatch:
+    inputs:
+      update-type:
+        description: "What to update"
+        required: false
+        default: ""
+        type: choice
+        options:
+          - ""
+          - inputs
+      inputs:
+        description: "Specific flake inputs to update (space-separated, empty for all)"
+        required: false
+        default: ""
+      auto-merge:
+        description: "Enable auto-merge for created pull requests"
+        type: boolean
+        required: false
+        default: true
+jobs:
+  update:
+    uses: ./.github/workflows/_updater.yml
+    with:
+      update-type: ${{ github.event.inputs.update-type }}
+      inputs: ${{ github.event.inputs.inputs }}
+      pr-labels: "dependencies,automated"
+      auto-merge: ${{ github.event.inputs.auto-merge == '' && true || github.event.inputs.auto-merge == 'true' }}
+    secrets:
+      APP_ID: ${{ secrets.APP_ID }}
+      APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
+    permissions:
+      contents: write
+      pull-requests: write

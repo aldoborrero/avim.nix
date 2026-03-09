@@ -1,11 +1,12 @@
 # yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
 
-name: Update Flake
+name: Updater
+
 on:
   workflow_call:
     inputs:
-      packages:
-        description: "Space-separated list of specific packages to update (empty for all)"
+      update-type:
+        description: "What to update: 'inputs' or empty for all"
         required: false
         type: string
         default: ""
@@ -39,19 +40,22 @@ jobs:
       matrix: ${{ steps.build-matrix.outputs.matrix }}
       has-updates: ${{ steps.build-matrix.outputs.has-updates }}
     steps:
-      - uses: actions/checkout@v5
-
-      - name: Setup Nix
-        uses: cachix/install-nix-action@v31
-
+      - name: Generate GitHub App Token
+        id: app-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+      - name: Checkout repository
+        uses: actions/checkout@v6
+      - name: Install Python dependencies
+        run: pip install pyyaml
       - name: Build update matrix
         id: build-matrix
         env:
-          PACKAGES: "${{ inputs.packages }}"
+          UPDATE_TYPE: "${{ inputs.update-type }}"
           INPUTS: "${{ inputs.inputs }}"
-        run: |
-          # Use the discovery script
-          .github/actions/discovery.sh
+        run: python3 .github/actions/discovery.py
 
   update:
     needs: discover
@@ -70,48 +74,55 @@ jobs:
         with:
           app-id: ${{ secrets.APP_ID }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
-
       - name: Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           token: ${{ steps.app-token.outputs.token }}
-
       - name: Setup Nix
         uses: cachix/install-nix-action@v31
         with:
           github_access_token: ${{ steps.app-token.outputs.token }}
-
-      - name: Set up git
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
+          extra_nix_config: |
+            extra-substituters = https://nix-community.cachix.org
+            extra-trusted-public-keys = nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=
       - name: Perform update
         id: update
         env:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: .github/actions/update.sh "${{ matrix.type }}" "${{ matrix.name }}"
+      - name: Set PR details
+        id: pr-details
         run: |
-          # Use the update script
-          if [[ "${{ matrix.type }}" = package ]]; then
-            # Only load the devshell to update packages
-            nix develop -c .github/actions/update.sh "${{ matrix.type }}" "${{ matrix.name }}"
-          else
-            .github/actions/update.sh "${{ matrix.type }}" "${{ matrix.name }}"
-          fi
-
+          echo "branch=update-${{ matrix.name }}" >> $GITHUB_OUTPUT
+          echo "title=flake.lock: Update ${{ matrix.name }}" >> $GITHUB_OUTPUT
+          {
+            echo 'body<<EOF'
+            echo "This PR updates the flake input \`${{ matrix.name }}\` to the latest version."
+            echo ""
+            echo "## Changes"
+            echo "- ${{ matrix.name }}: \`${{ matrix.current_version }}\` -> \`${{ steps.update.outputs.new_version }}\`"
+            echo 'EOF'
+          } >> $GITHUB_OUTPUT
       - name: Create pull request
         if: steps.update.outputs.updated == 'true'
+        uses: peter-evans/create-pull-request@v8
+        id: cpr
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          branch: ${{ steps.pr-details.outputs.branch }}
+          delete-branch: true
+          title: ${{ steps.pr-details.outputs.title }}
+          body: ${{ steps.pr-details.outputs.body }}
+          labels: ${{ inputs.pr-labels }}
+          sign-commits: true
+          commit-message: ${{ steps.pr-details.outputs.title }}
+          committer: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
+          author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
+      - name: Enable auto-merge
+        if: steps.update.outputs.updated == 'true' && inputs.auto-merge && steps.cpr.outputs.pull-request-number
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
-          PR_LABELS: ${{ inputs.pr-labels }}
-          AUTO_MERGE: ${{ inputs.auto-merge }}
-        run: |
-          # The script should be available from the checkout
-          .github/actions/create-pr.sh \
-            "${{ matrix.type }}" \
-            "${{ matrix.name }}" \
-            "${{ matrix.current_version }}" \
-            "${{ steps.update.outputs.new_version }}"
+        run: gh pr merge ${{ steps.cpr.outputs.pull-request-number }} --auto --squash
 
   summary:
     needs: [discover, update]
@@ -125,9 +136,9 @@ jobs:
 
           # Check overall status
           if [ "${{ contains(needs.update.result, 'failure') }}" = "true" ]; then
-            echo "⚠️ Some updates failed. Check individual job logs for details." >> $GITHUB_STEP_SUMMARY
+            echo "Some updates failed. Check individual job logs for details." >> $GITHUB_STEP_SUMMARY
           else
-            echo "✅ All update jobs completed." >> $GITHUB_STEP_SUMMARY
+            echo "All update jobs completed." >> $GITHUB_STEP_SUMMARY
           fi
 
           echo "" >> $GITHUB_STEP_SUMMARY

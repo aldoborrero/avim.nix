@@ -1,0 +1,80 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+
+name: Nightly Release
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Generate GitHub App Token
+        id: app-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          fetch-depth: 0
+
+      - name: Determine release tag
+        id: tag
+        run: |
+          date_tag="v$(date -u +%Y.%m.%d)"
+          # Check if this date tag already exists, if so append a revision
+          existing=$(git tag -l "${date_tag}*" | sort -V | tail -1)
+          if [ -z "$existing" ]; then
+            tag="${date_tag}"
+          elif [ "$existing" = "$date_tag" ]; then
+            tag="${date_tag}.1"
+          else
+            # Extract revision number and increment
+            rev=$(echo "$existing" | grep -oP '\.\d+$' | tr -d '.')
+            tag="${date_tag}.$((rev + 1))"
+          fi
+          echo "tag=$tag" >> $GITHUB_OUTPUT
+          echo "Release tag: $tag"
+
+      - name: Generate changelog
+        id: changelog
+        run: |
+          # Get the previous tag
+          prev_tag=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
+
+          {
+            echo 'body<<EOF'
+            echo "## What's Changed"
+            echo ""
+            if [ -n "$prev_tag" ]; then
+              git log "${prev_tag}..HEAD" --pretty=format:"- %s (%h)" --no-merges
+            else
+              git log --pretty=format:"- %s (%h)" --no-merges -20
+            fi
+            echo ""
+            echo ""
+            echo "## Flake Inputs"
+            echo ""
+            echo '```'
+            jq -r '.nodes | to_entries[] | select(.key != "root") | select(.value.locked.rev != null) | "\(.key): \(.value.locked.rev[:8])"' flake.lock | sort
+            echo '```'
+            echo 'EOF'
+          } >> $GITHUB_OUTPUT
+
+      - name: Create release
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: |
+          gh release create "${{ steps.tag.outputs.tag }}" \
+            --title "${{ steps.tag.outputs.tag }}" \
+            --notes "${{ steps.changelog.outputs.body }}" \
+            --latest

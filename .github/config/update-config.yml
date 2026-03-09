@@ -1,0 +1,7 @@
+# Configuration for automatic updates
+# See .github/actions/discovery.py for usage
+
+skip:
+  # Flake inputs to skip from auto-updates
+  inputs: []
+    # - nixpkgs  # example: pinned for stability
