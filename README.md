@@ -32,144 +32,188 @@ $ nix run avim#avim
 
 ## Keybindings
 
+<!-- keymaps:start -->
+<!-- Generated from packages/avim/config.nix by `nix run .#docs` — do not edit by hand. -->
+
 > **Note**: Leader key is `<Space>`, Local leader is `,`
 
-### Navigation
+### Find
 
-| Key | Action | Description |
-|-----|--------|-------------|
-| `<C-h>` | Navigate left | Move to left window |
-| `<C-j>` | Navigate down | Move to window below |
-| `<C-k>` | Navigate up | Move to window above |
-| `<C-l>` | Navigate right | Move to right window |
-| `]b` | Next buffer | Switch to next buffer |
-| `[b` | Previous buffer | Switch to previous buffer |
-| `s` | Flash jump | Jump to location with flash.nvim |
-| `S` | Flash treesitter | Jump with treesitter nodes (normal/operator mode) |
+| Key | Mode | Description |
+|-----|------|-------------|
+| `<leader>ff` | Normal | Find files |
+| `<leader>fF` | Normal | Find all files |
+| `<leader>fg` | Normal | Find git files |
+| `<leader>fw` | Normal | Find words |
+| `<leader>fW` | Normal | Find words in all files |
+| `<leader>fb` | Normal | Find buffers |
+| `<leader>fh` | Normal | Find help |
+| `<leader>fo` | Normal | Find old files |
+| `<leader>fO` | Normal | Find old files (cwd) |
+| `<leader>fc` | Normal | Find word under cursor |
+| `<leader>fC` | Normal | Find commands |
+| `<leader>fk` | Normal | Find keymaps |
+| `<leader>fm` | Normal | Find man |
+| `<leader>f'` | Normal | Find marks |
+| `<leader>fr` | Normal | Find registers |
+| `<leader>ft` | Normal | Find themes |
+| `<leader>fs` | Normal | Find buffers/recent/files |
+| `<leader>fp` | Normal | Find projects |
+| `<leader>fn` | Normal | Find notifications |
+| `<leader>f<CR>` | Normal | Resume previous search |
+| `<leader>fl` | Normal | Find lines |
+| `<leader>fu` | Normal | Find undo history |
 
-### File Management
+### Search
 
-| Key | Action | Description |
-|-----|--------|-------------|
-| `<leader>e` | Toggle file explorer | Toggle Neo-tree |
-| `<leader>o` | Focus explorer | Toggle Neo-tree focus |
-| `<leader><leader>` | Find files | Quick file picker |
-| `<leader>ff` | Find files | Find files in project |
-| `<leader>fF` | Find all files | Find all files (including hidden) |
-| `<leader>fg` | Find git files | Find git tracked files |
-| `<leader>fw` | Find words | Search for words in project |
-| `<leader>fW` | Find words (all) | Search in all files |
-| `<leader>fb` | Find buffers | Search open buffers |
-| `<leader>fo` | Find old files | Recent files |
-| `<leader>fO` | Find old files (cwd) | Recent files in current directory |
-| `<leader>fh` | Find help | Search help tags |
-| `<leader>fc` | Find word under cursor | Search current word |
-| `<leader>fC` | Find commands | Search available commands |
-| `<leader>fk` | Find keymaps | Search keymaps |
-| `<leader>fm` | Find man pages | Search manual pages |
-| `<leader>f'` | Find marks | Search marks |
-| `<leader>fr` | Find registers | Search registers |
-| `<leader>ft` | Find themes | Search colorschemes |
-| `<leader>fs` | Find smart | Smart buffer/recent/files |
-| `<leader>fp` | Find projects | Search projects |
-| `<leader>fn` | Find notifications | Search notifications |
-| `<leader>fl` | Find lines | Search lines in buffer |
-| `<leader>fu` | Find undo history | Browse undo tree |
-| `<leader>f<CR>` | Resume search | Resume previous search |
+| Key | Mode | Description |
+|-----|------|-------------|
+| `<leader>sr` | Normal | Search and replace |
+| `<leader>sw` | Normal | Search current word |
+| `<leader>sw` | Visual | Search selected text |
+| `<leader>sp` | Normal | Search in current file |
+| `<leader>st` | Normal | Search todo comments |
 
-### Git Operations
+### Session/Quit
 
-| Key | Action | Description |
-|-----|--------|-------------|
-| `<leader>gb` | Git branches | Browse branches |
-| `<leader>gc` | Git commits | Repository commit history |
-| `<leader>gC` | Git commits (file) | Current file commit history |
-| `<leader>gt` | Git status | Show git status |
-| `<leader>gT` | Git stash | Browse stash |
-| `<leader>go` | Git browse | Open in browser |
-| `<leader>gd` | Open Diffview | Open diff viewer |
-| `<leader>gh` | File history | View file history |
-| `<leader>gH` | Current file history | View current file history |
-| `<leader>gq` | Close Diffview | Close diff viewer |
-| `<leader>gg` | LazyGit | Open LazyGit |
+| Key | Mode | Description |
+|-----|------|-------------|
+| `<leader>qq` | Normal | Quit Neovim |
+| `<leader>qs` | Normal | Save session |
+| `<leader>ql` | Normal | Load last session |
+| `<leader>qd` | Normal | Stop session tracking |
+| `<leader>qr` | Normal | Restore last session |
 
-### LSP (Language Server)
+### Git
 
-| Key | Action | Description |
-|-----|--------|-------------|
-| `gd` | Go to definition | Jump to definition |
-| `gD` | Go to declaration | Jump to declaration |
-| `gi` | Go to implementation | Jump to implementation |
-| `gr` | Show references | Show references |
-| `K` | Hover documentation | Show hover info |
-| `<leader>la` | Code action | Show code actions |
-| `<leader>lr` | Rename symbol | Rename symbol |
-| `<leader>lf` | Format buffer | Format code |
-| `<leader>lD` | Search diagnostics | Search diagnostics |
-| `<leader>lw` | Workspace symbols | Search LSP symbols |
-| `]d` / `[d` | Next/prev diagnostic | Jump between diagnostics |
+| Key | Mode | Description |
+|-----|------|-------------|
+| `<leader>gb` | Normal | Git branches |
+| `<leader>gc` | Normal | Git commits (repository) |
+| `<leader>gC` | Normal | Git commits (current file) |
+| `<leader>gt` | Normal | Git status |
+| `<leader>gT` | Normal | Git stash |
+| `<leader>go` | Normal | Git browse (open) |
+| `<leader>go` | Visual | Git browse (open) |
+| `<leader>gd` | Normal | Open Diffview |
+| `<leader>gh` | Normal | File history |
+| `<leader>gH` | Normal | Current file history |
+| `<leader>gq` | Normal | Close Diffview |
+| `<leader>gg` | Normal | Open LazyGit |
 
-### Search and Replace
+### LSP
 
-| Key | Action | Description |
-|-----|--------|-------------|
-| `<leader>sr` | Search and replace | Open Spectre |
-| `<leader>sw` | Search current word | Search and replace current word |
-| `<leader>sp` | Search in file | Search and replace in current file |
+| Key | Mode | Description |
+|-----|------|-------------|
+| `<leader>la` | Normal | Code action |
+| `<leader>lr` | Normal | Rename symbol |
+| `<leader>lf` | Normal | Format buffer |
+| `<leader>lf` | Visual | Format selection |
+| `<leader>lh` | Normal | Signature help |
+| `<leader>li` | Normal | LSP info |
+| `<leader>lR` | Normal | Restart LSP |
+| `<leader>lD` | Normal | Search diagnostics |
+| `<leader>lw` | Normal | Workspace symbols |
+| `<leader>ld` | Normal | Show line diagnostics |
+| `<leader>lq` | Normal | Diagnostic quickfix |
 
 ### UI/Utils
 
-| Key | Action | Description |
-|-----|--------|-------------|
-| `<leader>u\|` | Toggle indent guides | Toggle indent guides |
-| `<leader>uD` | Dismiss notifications | Clear all notifications |
-| `<leader>uZ` | Toggle zen mode | Toggle zen mode |
-| `<leader>uu` | Toggle undotree | Toggle undo tree |
-| `<leader>H` | Home screen | Toggle dashboard |
-
-### Terminal
-
-| Key | Action | Description |
-|-----|--------|-------------|
-| `<F9>`-`<F12>` | Toggle terminal 9-12 | Dedicated floating terminals (toggleterm 9-12) |
-| `<C-\>` | Toggle terminal | Toggle floating terminal |
-| `<leader>gg` | Open LazyGit | Open LazyGit in terminal |
-| `<Esc><Esc>` | Exit terminal mode | Exit to normal mode (in terminal) |
-
-### Window Management
-
-| Key | Action | Description |
-|-----|--------|-------------|
-| `\|` | Vertical split | Create vertical split |
-| `\` | Horizontal split | Create horizontal split |
+| Key | Mode | Description |
+|-----|------|-------------|
+| `<leader>u\|` | Normal | Toggle indent guides |
+| `<leader>uD` | Normal | Dismiss notifications |
+| `<leader>uZ` | Normal | Toggle zen mode |
+| `<leader>uf` | Normal | Toggle auto-format |
+| `<leader>uu` | Normal | Toggle undotree |
 
 ### Harpoon
 
-| Key | Action | Description |
-|-----|--------|-------------|
-| `<leader>ha` | Harpoon add file | Add file to harpoon |
-| `<leader>hh` | Harpoon menu | Toggle harpoon menu |
-| `<leader>h1-9` | Jump to file 1-9 | Jump to harpoon file |
-| `<leader>hn` | Next file | Jump to next harpoon file |
-| `<leader>hp` | Previous file | Jump to previous harpoon file |
-| `<leader>hd` | Remove file | Remove file from harpoon |
-| `<leader>hc` | Clear marks | Clear all harpoon marks |
+| Key | Mode | Description |
+|-----|------|-------------|
+| `<leader>ha` | Normal | Harpoon add file |
+| `<leader>hh` | Normal | Harpoon quick menu |
+| `<leader>h1` | Normal | Harpoon file 1 |
+| `<leader>h2` | Normal | Harpoon file 2 |
+| `<leader>h3` | Normal | Harpoon file 3 |
+| `<leader>h4` | Normal | Harpoon file 4 |
+| `<leader>h5` | Normal | Harpoon file 5 |
+| `<leader>h6` | Normal | Harpoon file 6 |
+| `<leader>h7` | Normal | Harpoon file 7 |
+| `<leader>h8` | Normal | Harpoon file 8 |
+| `<leader>h9` | Normal | Harpoon file 9 |
+| `<leader>hn` | Normal | Harpoon next |
+| `<leader>hp` | Normal | Harpoon previous |
+| `<leader>hd` | Normal | Remove current file from Harpoon |
+| `<leader>hc` | Normal | Clear all Harpoon marks |
 
-### Todo Comments
+### Quick Actions
 
-| Key | Action | Description |
-|-----|--------|-------------|
-| `]t` | Next todo | Jump to next todo comment |
-| `[t` | Previous todo | Jump to previous todo comment |
-| `<leader>st` | Search todos | Search todo comments |
+| Key | Mode | Description |
+|-----|------|-------------|
+| `<leader>xr` | Normal | Reload file from disk |
+| `<leader>xy` | Normal | Copy entire buffer to clipboard |
+| `<leader>xs` | Normal | Save file |
+| `<leader>xS` | Normal | Save all files |
+| `<leader>xw` | Normal | Toggle word wrap |
+| `<leader>xp` | Normal | Show full file path |
+| `<leader>xe` | Normal | Make file executable |
 
-### Editing
+### Other Leader
 
-| Key | Action | Description |
-|-----|--------|-------------|
-| `<C-s>` | Save file | Save current file |
-| `<Esc>` | Clear highlights | Clear search highlights |
-| `<leader>/` | Toggle comment | Toggle comment (line/selection) |
+| Key | Mode | Description |
+|-----|------|-------------|
+| `<leader>n` | Normal | New file |
+| `<leader>e` | Normal | Toggle file explorer |
+| `<leader>o` | Normal | Toggle Explorer Focus |
+| `<leader>H` | Normal | Home Screen |
+| `<leader><leader>` | Normal | Find files |
+| `<leader>/` | Normal | Toggle comment |
+| `<leader>/` | Visual | Toggle comment |
+
+### General
+
+| Key | Mode | Description |
+|-----|------|-------------|
+| `jk` | Insert | Exit insert mode |
+| `<C-h>` | Normal | Navigate left |
+| `<C-j>` | Normal | Navigate down |
+| `<C-k>` | Normal | Navigate up |
+| `<C-l>` | Normal | Navigate right |
+| `]b` | Normal | Next buffer |
+| `[b` | Normal | Previous buffer |
+| `<C-s>` | Normal | Save file |
+| `<Esc>` | Normal | Clear search highlights |
+| `\|` | Normal | Vertical split |
+| `\` | Normal | Horizontal split |
+| `s` | Normal, Visual, Operator | Flash jump |
+| `S` | Normal, Operator | Flash treesitter |
+| `r` | Operator | Remote Flash |
+| `R` | Operator, Visual | Flash treesitter search |
+| `]t` | Normal | Next todo comment |
+| `[t` | Normal | Previous todo comment |
+| `gd` | Normal | Go to definition |
+| `gD` | Normal | Go to declaration |
+| `gi` | Normal | Go to implementation |
+| `gr` | Normal | Show references |
+| `gt` | Normal | Go to type definition |
+| `K` | Normal | Hover documentation |
+| `]d` | Normal | Next diagnostic |
+| `[d` | Normal | Previous diagnostic |
+| `gp` | Normal | Preview definition |
+| `<Esc><Esc>` | Terminal | Exit terminal mode |
+| `<F9>` | Normal | Toggle terminal 1 |
+| `<F9>` | Terminal | Toggle terminal 1 |
+| `<F10>` | Normal | Toggle terminal 2 |
+| `<F10>` | Terminal | Toggle terminal 2 |
+| `<F11>` | Normal | Toggle terminal 3 |
+| `<F11>` | Terminal | Toggle terminal 3 |
+| `<F12>` | Normal | Toggle terminal 4 |
+| `<F12>` | Terminal | Toggle terminal 4 |
+| `<C-l>` | Insert, Select | Luasnip jump next |
+| `<C-h>` | Insert, Select | Luasnip jump prev |
+
+<!-- keymaps:end -->
 
 ## Acknowledgements
 
