@@ -131,7 +131,7 @@ $ nix run avim#avim
 
 | Key | Action | Description |
 |-----|--------|-------------|
-| `<F9>`-`<F12>` | Toggle terminal 1-4 | Dedicated floating terminals |
+| `<F9>`-`<F12>` | Toggle terminal 9-12 | Dedicated floating terminals (toggleterm 9-12) |
 | `<C-\>` | Toggle terminal | Toggle floating terminal |
 | `<leader>gg` | Open LazyGit | Open LazyGit in terminal |
 | `<Esc><Esc>` | Exit terminal mode | Exit to normal mode (in terminal) |
