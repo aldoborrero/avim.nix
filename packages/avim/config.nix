@@ -1,9 +1,5 @@
-{ pkgs, inputs }:
+{ pkgs, ... }:
 {
-  imports = [
-    inputs.pi-agent-nvim.modules.nixvim.default
-  ];
-
   globals = {
     mapleader = " ";
     maplocalleader = ",";
@@ -404,17 +400,23 @@
       options.desc = "Search in current file";
     }
 
-    # Comments
+    # Comments (builtin commenting, Neovim 0.10+)
     {
       key = "<leader>/";
-      action.__raw = "function() require('Comment.api').toggle.linewise.current() end";
-      options.desc = "Toggle comment";
+      action = "gcc";
+      options = {
+        remap = true;
+        desc = "Toggle comment";
+      };
     }
     {
       mode = "v";
       key = "<leader>/";
-      action.__raw = "function() require('Comment.api').toggle.linewise(vim.fn.visualmode()) end";
-      options.desc = "Toggle comment";
+      action = "gc";
+      options = {
+        remap = true;
+        desc = "Toggle comment";
+      };
     }
 
     # Snacks utilities
@@ -578,12 +580,12 @@
     # Diagnostic Navigation
     {
       key = "]d";
-      action = "<cmd>lua vim.diagnostic.goto_next()<CR>";
+      action.__raw = "function() vim.diagnostic.jump({ count = 1, float = true }) end";
       options.desc = "Next diagnostic";
     }
     {
       key = "[d";
-      action = "<cmd>lua vim.diagnostic.goto_prev()<CR>";
+      action.__raw = "function() vim.diagnostic.jump({ count = -1, float = true }) end";
       options.desc = "Previous diagnostic";
     }
 
@@ -592,7 +594,11 @@
       key = "gp";
       action.__raw = ''
         function()
-          local params = vim.lsp.util.make_position_params()
+          local client = vim.lsp.get_clients({ bufnr = 0 })[1]
+          if not client then
+            return
+          end
+          local params = vim.lsp.util.make_position_params(0, client.offset_encoding)
           return vim.lsp.buf_request(0, 'textDocument/definition', params, function(_, result)
             if result == nil or vim.tbl_isempty(result) then
               return nil
@@ -662,62 +668,6 @@
       key = "<leader>lq";
       action = "<cmd>lua vim.diagnostic.setloclist()<CR>";
       options.desc = "Diagnostic quickfix";
-    }
-
-    # AI Tools (F5-F8)
-    {
-      key = "<F5>";
-      action = "<cmd>ClaudeCode<CR>";
-      options.desc = "Toggle Claude Code";
-    }
-    {
-      key = "<F17>";
-      action = "<cmd>ClaudeCodeContinue<CR>";
-      options.desc = "Continue Claude Code (Shift+F5)";
-    }
-    {
-      key = "<F6>";
-      action = "<cmd>PiAgent<CR>";
-      options.desc = "Toggle Pi Agent";
-    }
-    {
-      key = "<F18>";
-      action = "<cmd>PiAgentContinue<CR>";
-      options.desc = "Continue Pi Agent (Shift+F6)";
-    }
-    {
-      key = "<F7>";
-      action.__raw = "function() require('opencode').toggle() end";
-      options.desc = "Toggle OpenCode";
-    }
-    {
-      key = "<F8>";
-      action.__raw = ''
-        function()
-          local Terminal = require('toggleterm.terminal').Terminal
-          if not _G.codex_term then
-            _G.codex_term = Terminal:new({
-              cmd = 'codex',
-              count = 8,
-              direction = 'float',
-              hidden = true,
-              float_opts = { border = 'curved' }
-            })
-          end
-          _G.codex_term:toggle()
-        end
-      '';
-      options.desc = "Toggle Codex";
-    }
-    {
-      mode = "t";
-      key = "<F8>";
-      action.__raw = ''
-        function()
-          if _G.codex_term then _G.codex_term:toggle() end
-        end
-      '';
-      options.desc = "Toggle Codex";
     }
 
     # Git
@@ -930,7 +880,7 @@
       key = "<C-l>";
       action.__raw = ''
         function()
-          if require("luasnip").jumpable(1) then
+          if require("luasnip").locally_jumpable(1) then
             require("luasnip").jump(1)
           end
         end
@@ -948,7 +898,7 @@
       key = "<C-h>";
       action.__raw = ''
         function()
-          if require("luasnip").jumpable(-1) then
+          if require("luasnip").locally_jumpable(-1) then
             require("luasnip").jump(-1)
           end
         end
@@ -1049,11 +999,11 @@
             "accept"
             "fallback"
           ];
-          "<C-k>" = [
+          "<C-j>" = [
             "select_next"
             "fallback"
           ];
-          "<C-j>" = [
+          "<C-k>" = [
             "select_prev"
             "fallback"
           ];
@@ -1112,18 +1062,7 @@
         fuzzy = {
           prebuilt_binaries.download = true;
         };
-        snippets = {
-          expand.__raw = "function(snippet) require('luasnip').lsp_expand(snippet) end";
-          active.__raw = ''
-            function(filter)
-              if filter and filter.direction then
-                return require("luasnip").jumpable(filter.direction)
-              end
-              return require("luasnip").in_snippet()
-            end
-          '';
-          jump.__raw = "function(direction) require('luasnip').jump(direction) end";
-        };
+        snippets.preset = "luasnip";
       };
     };
 
@@ -1280,8 +1219,6 @@
       };
     };
 
-    alpha.enable = false;
-
     gitsigns = {
       enable = true;
       settings = {
@@ -1311,8 +1248,6 @@
 
     nvim-autopairs.enable = true;
 
-    comment.enable = true;
-
     nvim-surround = {
       enable = true;
       settings = {
@@ -1331,8 +1266,6 @@
         };
       };
     };
-
-    indent-blankline.enable = true;
 
     toggleterm = {
       enable = true;
@@ -1606,35 +1539,8 @@
       enableTelescope = false;
     };
 
-    project-nvim = {
-      enable = false;
-      enableTelescope = false;
-    };
-
     persistence = {
       enable = true;
-    };
-
-    claude-code = {
-      enable = true;
-      settings = {
-        window = {
-          split_ratio = 0.4;
-          position = "horizontal";
-          hide_numbers = false;
-          hide_signcolumn = false;
-        };
-      };
-    };
-
-    pi-agent = {
-      enable = true;
-      settings = {
-        window = {
-          split_ratio = 0.4;
-          position = "botright";
-        };
-      };
     };
 
     spectre.enable = true;
@@ -1678,8 +1584,6 @@
         notify_on_error = true;
       };
     };
-
-    opencode.enable = true;
   };
 
   # Autocommands

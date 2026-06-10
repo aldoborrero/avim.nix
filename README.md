@@ -21,7 +21,7 @@ Having my Neovim configuration ready as a `flake` allows me to run `nvim` alread
 You can add the following registry shortcut to type less characters:
 
 ```console
-$ nix registry add avim github:aldoborrero/astronvim.nix
+$ nix registry add avim github:aldoborrero/avim.nix
 ```
 
 ## Running avim
@@ -62,7 +62,6 @@ $ nix run avim#avim
 | `<leader>fb` | Find buffers | Search open buffers |
 | `<leader>fo` | Find old files | Recent files |
 | `<leader>fO` | Find old files (cwd) | Recent files in current directory |
-| `<leader>fa` | Find config files | Search config files |
 | `<leader>fh` | Find help | Search help tags |
 | `<leader>fc` | Find word under cursor | Search current word |
 | `<leader>fC` | Find commands | Search available commands |
@@ -107,7 +106,8 @@ $ nix run avim#avim
 | `<leader>lr` | Rename symbol | Rename symbol |
 | `<leader>lf` | Format buffer | Format code |
 | `<leader>lD` | Search diagnostics | Search diagnostics |
-| `<leader>ls` | Search symbols | Search LSP symbols |
+| `<leader>lw` | Workspace symbols | Search LSP symbols |
+| `]d` / `[d` | Next/prev diagnostic | Jump between diagnostics |
 
 ### Search and Replace
 
@@ -127,14 +127,13 @@ $ nix run avim#avim
 | `<leader>uu` | Toggle undotree | Toggle undo tree |
 | `<leader>H` | Home screen | Toggle dashboard |
 
-### Terminal and AI
+### Terminal
 
 | Key | Action | Description |
 |-----|--------|-------------|
-| `<F4>` | Open Claude Code | Open Claude Code AI assistant |
-| `<F5>` | Continue conversation | Continue Claude Code conversation |
-| `<F6>` | Open LazyGit | Open LazyGit in terminal |
-| `<F7>` | Toggle terminal | Toggle floating terminal |
+| `<F9>`-`<F12>` | Toggle terminal 1-4 | Dedicated floating terminals |
+| `<C-\>` | Toggle terminal | Toggle floating terminal |
+| `<leader>gg` | Open LazyGit | Open LazyGit in terminal |
 | `<Esc><Esc>` | Exit terminal mode | Exit to normal mode (in terminal) |
 
 ### Window Management
@@ -178,4 +177,4 @@ Thanks to mighty @Mic92 to whom I took inspiration (and stole majority of his co
 
 ## License
 
-See [License](License) for more information.
+See [LICENSE](LICENSE) for more information.

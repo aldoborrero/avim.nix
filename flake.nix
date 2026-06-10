@@ -1,5 +1,5 @@
 {
-  description = "astronvim.nix / My personal astronvim configuration";
+  description = "avim.nix / My personal Neovim configuration";
 
   nixConfig = {
     extra-substituters = [
@@ -26,10 +26,6 @@
     };
     nixvim = {
       url = "github:nix-community/nixvim";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    pi-agent-nvim = {
-      url = "github:aldoborrero/pi-agent.nvim";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
