@@ -1,0 +1,81 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+
+name: Weekly Release
+on:
+  # Run weekly on Monday at 00:00 UTC (after Sunday's automatic update)
+  schedule:
+    - cron: "0 0 * * 1"
+
+  # Allow manual trigger
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Check for new commits since last release
+        id: check
+        run: |
+          last_tag=$(git describe --tags --abbrev=0 2>/dev/null || true)
+          if [ -n "$last_tag" ] && [ -z "$(git rev-list "$last_tag"..HEAD)" ]; then
+            echo "No new commits since $last_tag, skipping release"
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Install nix
+        if: steps.check.outputs.skip != 'true'
+        uses: cachix/install-nix-action@8aa03977d8d733052d78f4e008a241fd1dbf36b3 # v31.10.6
+        with:
+          nix_path: nixpkgs=channel:nixos-unstable
+          extra_nix_config: |
+            accept-flake-config = true
+
+      - name: Compute version
+        if: steps.check.outputs.skip != 'true'
+        id: version
+        run: |
+          base=$(date -u +%Y.%m.%d)
+          n=0
+          while git rev-parse "v$base.$n" >/dev/null 2>&1; do
+            n=$((n + 1))
+          done
+          echo "version=$base.$n" >> "$GITHUB_OUTPUT"
+
+      - name: Bump package version
+        if: steps.check.outputs.skip != 'true'
+        run: |
+          sed -i 's/version = "[^"]*";/version = "${{ steps.version.outputs.version }}";/' \
+            packages/avim/default.nix
+
+      - name: Build package
+        if: steps.check.outputs.skip != 'true'
+        run: nix build .#avim
+
+      - name: Commit, tag and push
+        if: steps.check.outputs.skip != 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -am "avim: release ${{ steps.version.outputs.version }}"
+          git tag "v${{ steps.version.outputs.version }}"
+          git push origin main "v${{ steps.version.outputs.version }}"
+
+      - name: Create GitHub release
+        if: steps.check.outputs.skip != 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |-
+          gh release create "v${{ steps.version.outputs.version }}" \
+            --title "v${{ steps.version.outputs.version }}" \
+            --generate-notes
