@@ -131,9 +131,6 @@ $ nix run avim#avim
 
 | Key | Action | Description |
 |-----|--------|-------------|
-| `<F5>` | Toggle Claude Code | Open Claude Code AI assistant |
-| `<S-F5>` | Continue Claude Code | Continue Claude Code conversation |
-| `<F7>` | Toggle OpenCode | Open OpenCode |
 | `<F8>` | Toggle Codex | Open Codex in floating terminal |
 | `<F9>`-`<F12>` | Toggle terminal 1-4 | Dedicated floating terminals |
 | `<C-\>` | Toggle terminal | Toggle floating terminal |

@@ -670,22 +670,7 @@
       options.desc = "Diagnostic quickfix";
     }
 
-    # AI Tools (F5-F8)
-    {
-      key = "<F5>";
-      action = "<cmd>ClaudeCode<CR>";
-      options.desc = "Toggle Claude Code";
-    }
-    {
-      key = "<F17>";
-      action = "<cmd>ClaudeCodeContinue<CR>";
-      options.desc = "Continue Claude Code (Shift+F5)";
-    }
-    {
-      key = "<F7>";
-      action.__raw = "function() require('opencode').toggle() end";
-      options.desc = "Toggle OpenCode";
-    }
+    # AI Tools (F8)
     {
       key = "<F8>";
       action.__raw = ''
@@ -1589,18 +1574,6 @@
       enable = true;
     };
 
-    claude-code = {
-      enable = true;
-      settings = {
-        window = {
-          split_ratio = 0.4;
-          position = "horizontal";
-          hide_numbers = false;
-          hide_signcolumn = false;
-        };
-      };
-    };
-
     spectre.enable = true;
 
     conform-nvim = {
@@ -1642,8 +1615,6 @@
         notify_on_error = true;
       };
     };
-
-    opencode.enable = true;
   };
 
   # Autocommands
