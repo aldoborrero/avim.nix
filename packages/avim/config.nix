@@ -5,6 +5,22 @@
     maplocalleader = ",";
   };
 
+  # Runtime dependencies for conform formatters and the lazygit keymap,
+  # so the package is self-contained wherever the flake runs
+  extraPackages = with pkgs; [
+    deno
+    gofumpt
+    gotools
+    lazygit
+    nixfmt-rfc-style
+    prettier
+    ruff
+    rustfmt
+    shfmt
+    stylua
+    taplo
+  ];
+
   colorschemes.catppuccin.enable = true;
 
   opts = {
@@ -497,9 +513,9 @@
     }
     {
       key = "S";
+      # visual mode excluded so nvim-surround keeps S for surrounding selections
       mode = [
         "n"
-        "x"
         "o"
       ];
       action.__raw = "function() require('flash').treesitter() end";
@@ -621,13 +637,13 @@
     }
     {
       key = "<leader>lf";
-      action.__raw = "function() require('conform').format({ async = true, lsp_fallback = true }) end";
+      action.__raw = "function() require('conform').format({ async = true, lsp_format = 'fallback' }) end";
       options.desc = "Format buffer";
     }
     {
       mode = "v";
       key = "<leader>lf";
-      action.__raw = "function() require('conform').format({ async = true, lsp_fallback = true, range = { start = vim.api.nvim_buf_get_mark(0, '<'), ['end'] = vim.api.nvim_buf_get_mark(0, '>') } }) end";
+      action.__raw = "function() require('conform').format({ async = true, lsp_format = 'fallback', range = { start = vim.api.nvim_buf_get_mark(0, '<'), ['end'] = vim.api.nvim_buf_get_mark(0, '>') } }) end";
       options.desc = "Format selection";
     }
     {
@@ -1555,7 +1571,7 @@
             "goimports"
           ];
           html = [ "prettier" ];
-          javascript = [ "deno" ];
+          javascript = [ "deno_fmt" ];
           json = [ "prettier" ];
           lua = [ "stylua" ];
           markdown = [ "prettier" ];
@@ -1577,7 +1593,7 @@
             if vim.g.disable_autoformat then
               return
             end
-            return { lsp_fallback = true }
+            return { lsp_format = "fallback" }
           end
         '';
         log_level = "warn";

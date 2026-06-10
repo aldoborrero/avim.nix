@@ -45,7 +45,7 @@ $ nix run avim#avim
 | `]b` | Next buffer | Switch to next buffer |
 | `[b` | Previous buffer | Switch to previous buffer |
 | `s` | Flash jump | Jump to location with flash.nvim |
-| `S` | Flash treesitter | Jump with treesitter nodes |
+| `S` | Flash treesitter | Jump with treesitter nodes (normal/operator mode) |
 
 ### File Management
 
