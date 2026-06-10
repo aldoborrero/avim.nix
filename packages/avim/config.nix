@@ -670,37 +670,6 @@
       options.desc = "Diagnostic quickfix";
     }
 
-    # AI Tools (F8)
-    {
-      key = "<F8>";
-      action.__raw = ''
-        function()
-          local Terminal = require('toggleterm.terminal').Terminal
-          if not _G.codex_term then
-            _G.codex_term = Terminal:new({
-              cmd = 'codex',
-              count = 8,
-              direction = 'float',
-              hidden = true,
-              float_opts = { border = 'curved' }
-            })
-          end
-          _G.codex_term:toggle()
-        end
-      '';
-      options.desc = "Toggle Codex";
-    }
-    {
-      mode = "t";
-      key = "<F8>";
-      action.__raw = ''
-        function()
-          if _G.codex_term then _G.codex_term:toggle() end
-        end
-      '';
-      options.desc = "Toggle Codex";
-    }
-
     # Git
     {
       key = "<leader>gg";

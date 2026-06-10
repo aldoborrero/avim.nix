@@ -127,11 +127,10 @@ $ nix run avim#avim
 | `<leader>uu` | Toggle undotree | Toggle undo tree |
 | `<leader>H` | Home screen | Toggle dashboard |
 
-### Terminal and AI
+### Terminal
 
 | Key | Action | Description |
 |-----|--------|-------------|
-| `<F8>` | Toggle Codex | Open Codex in floating terminal |
 | `<F9>`-`<F12>` | Toggle terminal 1-4 | Dedicated floating terminals |
 | `<C-\>` | Toggle terminal | Toggle floating terminal |
 | `<leader>gg` | Open LazyGit | Open LazyGit in terminal |
