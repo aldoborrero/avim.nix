@@ -4,9 +4,11 @@ queue_rules:
     queue_conditions:
       - base=main
       - label~=merge-queue|dependencies
+    # Only nix-flake-check is required: it runs the full `nix flake check`
+    # including the avim-startup smoke test. Garnix is advisory because its
+    # free-tier quota can run out mid-month, which would stall the queue.
     merge_conditions:
       - check-success = nix-flake-check
-      - check-success = All Garnix checks
     merge_method: rebase
 
 pull_request_rules:

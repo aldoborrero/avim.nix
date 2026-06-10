@@ -48,8 +48,14 @@ jobs:
           FLAKE_INPUTS: ${{ inputs.inputs }}
         run: |
           if [ -n "$FLAKE_INPUTS" ]; then
+            for token in $FLAKE_INPUTS; do
+              if ! [[ "$token" =~ ^[a-zA-Z0-9_-]+$ ]]; then
+                echo "::error::Invalid flake input name: $token"
+                exit 1
+              fi
+            done
             # shellcheck disable=SC2086
-            nix flake update $FLAKE_INPUTS
+            nix flake update -- $FLAKE_INPUTS
           else
             nix flake update
           fi
