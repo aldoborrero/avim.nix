@@ -6,7 +6,7 @@
 with pkgs;
 let
   nvim-appname = "avim";
-  version = "2026.06.10.0";
+  version = lib.trim (builtins.readFile ./VERSION);
 
   nvim = inputs.nixvim.legacyPackages.${pkgs.stdenv.hostPlatform.system}.makeNixvimWithModule {
     inherit pkgs;
