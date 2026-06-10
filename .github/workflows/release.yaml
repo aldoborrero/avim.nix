@@ -29,8 +29,11 @@ jobs:
       - name: Fail if automated update PRs are still open
         env:
           GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
         run: |
-          open_prs=$(gh pr list --label dependencies --state open --json number --jq '.[].number')
+          # REST instead of `gh pr list` (GraphQL), which is flakier
+          open_prs=$(gh api "repos/$REPO/issues?labels=dependencies&state=open" \
+            --jq '[.[] | select(.pull_request) | .number] | join(" ")')
           if [ -n "$open_prs" ]; then
             echo "::error::Dependency update PR(s) still open: $open_prs." \
               "The release would tag main without this week's updates." \
