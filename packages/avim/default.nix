@@ -6,7 +6,7 @@
 with pkgs;
 let
   nvim-appname = "avim";
-  version = "2025.09.21.0";
+  version = "2026.06.10.0";
 
   nvim = inputs.nixvim.legacyPackages.${pkgs.stdenv.hostPlatform.system}.makeNixvimWithModule {
     inherit pkgs;
@@ -28,7 +28,7 @@ let
     inherit version;
     meta = (old.meta or { }) // {
       description = "Avim - Custom Neovim configuration";
-      homepage = "https://github.com/aldoborrero/astronvim.nix";
+      homepage = "https://github.com/aldoborrero/avim.nix";
       license = lib.licenses.mit;
     };
   });
