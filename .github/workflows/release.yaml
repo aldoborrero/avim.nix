@@ -12,6 +12,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: release
+  cancel-in-progress: false
+
 jobs:
   release:
     runs-on: ubuntu-latest
@@ -21,6 +25,18 @@ jobs:
         with:
           ref: main
           fetch-depth: 0
+
+      - name: Fail if automated update PRs are still open
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          open_prs=$(gh pr list --label dependencies --state open --json number --jq '.[].number')
+          if [ -n "$open_prs" ]; then
+            echo "::error::Dependency update PR(s) still open: $open_prs." \
+              "The release would tag main without this week's updates." \
+              "Investigate why the merge queue did not merge them, then re-run this workflow."
+            exit 1
+          fi
 
       - name: Check for new commits since last release
         id: check
@@ -54,28 +70,44 @@ jobs:
 
       - name: Bump package version
         if: steps.check.outputs.skip != 'true'
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
         run: |
-          sed -i 's/version = "[^"]*";/version = "${{ steps.version.outputs.version }}";/' \
-            packages/avim/default.nix
+          printf '%s\n' "$VERSION" > packages/avim/VERSION
+          actual=$(nix eval .#avim.version --raw)
+          if [ "$actual" != "$VERSION" ]; then
+            echo "::error::Version bump did not take effect: expected $VERSION, got $actual"
+            exit 1
+          fi
 
-      - name: Build package
+      - name: Run flake checks
         if: steps.check.outputs.skip != 'true'
-        run: nix build .#avim
+        run: nix flake check
 
       - name: Commit, tag and push
         if: steps.check.outputs.skip != 'true'
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git commit -am "avim: release ${{ steps.version.outputs.version }}"
-          git tag "v${{ steps.version.outputs.version }}"
-          git push origin main "v${{ steps.version.outputs.version }}"
+          # No diff when the VERSION file already contains the computed version
+          if ! git diff --quiet; then
+            git commit -am "avim: release $VERSION"
+          fi
+          git tag "v$VERSION"
+          # Retry once with a rebase in case a PR merged into main mid-run
+          if ! git push origin main "v$VERSION"; then
+            git pull --rebase origin main
+            git push origin main "v$VERSION"
+          fi
 
       - name: Create GitHub release
         if: steps.check.outputs.skip != 'true'
         env:
           GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.version.outputs.version }}
         run: |-
-          gh release create "v${{ steps.version.outputs.version }}" \
-            --title "v${{ steps.version.outputs.version }}" \
+          gh release create "v$VERSION" \
+            --title "v$VERSION" \
             --generate-notes

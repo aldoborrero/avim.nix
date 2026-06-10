@@ -4,9 +4,10 @@ queue_rules:
     queue_conditions:
       - base=main
       - label~=merge-queue|dependencies
+    # nix-flake-check runs the full `nix flake check`,
+    # including the avim-startup smoke test
     merge_conditions:
       - check-success = nix-flake-check
-      - check-success = Garnix CI / All Garnix checks
     merge_method: rebase
 
 pull_request_rules:
