@@ -80,41 +80,11 @@
         "type": "github"
       }
     },
-    "pi-agent-nvim": {
-      "inputs": {
-        "blueprint": [
-          "blueprint"
-        ],
-        "nixpkgs": [
-          "nixpkgs"
-        ],
-        "nixvim": [
-          "nixvim"
-        ],
-        "treefmt-nix": [
-          "treefmt-nix"
-        ]
-      },
-      "locked": {
-        "lastModified": 1770580159,
-        "narHash": "sha256-fUFC1Xqy3yXoBjLCYjXQSk7ymRzpItixYrzSCbrz/TE=",
-        "owner": "aldoborrero",
-        "repo": "pi-agent.nvim",
-        "rev": "4c169487344efa98dffef57a09452c1393c09f64",
-        "type": "github"
-      },
-      "original": {
-        "owner": "aldoborrero",
-        "repo": "pi-agent.nvim",
-        "type": "github"
-      }
-    },
     "root": {
       "inputs": {
         "blueprint": "blueprint",
         "nixpkgs": "nixpkgs",
         "nixvim": "nixvim",
-        "pi-agent-nvim": "pi-agent-nvim",
         "treefmt-nix": "treefmt-nix"
       }
     },

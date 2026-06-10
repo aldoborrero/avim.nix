@@ -1,9 +1,5 @@
-{ pkgs, inputs }:
+{ pkgs, ... }:
 {
-  imports = [
-    inputs.pi-agent-nvim.modules.nixvim.default
-  ];
-
   globals = {
     mapleader = " ";
     maplocalleader = ",";
@@ -684,16 +680,6 @@
       key = "<F17>";
       action = "<cmd>ClaudeCodeContinue<CR>";
       options.desc = "Continue Claude Code (Shift+F5)";
-    }
-    {
-      key = "<F6>";
-      action = "<cmd>PiAgent<CR>";
-      options.desc = "Toggle Pi Agent";
-    }
-    {
-      key = "<F18>";
-      action = "<cmd>PiAgentContinue<CR>";
-      options.desc = "Continue Pi Agent (Shift+F6)";
     }
     {
       key = "<F7>";
@@ -1611,16 +1597,6 @@
           position = "horizontal";
           hide_numbers = false;
           hide_signcolumn = false;
-        };
-      };
-    };
-
-    pi-agent = {
-      enable = true;
-      settings = {
-        window = {
-          split_ratio = 0.4;
-          position = "botright";
         };
       };
     };

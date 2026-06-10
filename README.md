@@ -133,8 +133,6 @@ $ nix run avim#avim
 |-----|--------|-------------|
 | `<F5>` | Toggle Claude Code | Open Claude Code AI assistant |
 | `<S-F5>` | Continue Claude Code | Continue Claude Code conversation |
-| `<F6>` | Toggle Pi Agent | Open Pi Agent |
-| `<S-F6>` | Continue Pi Agent | Continue Pi Agent conversation |
 | `<F7>` | Toggle OpenCode | Open OpenCode |
 | `<F8>` | Toggle Codex | Open Codex in floating terminal |
 | `<F9>`-`<F12>` | Toggle terminal 1-4 | Dedicated floating terminals |

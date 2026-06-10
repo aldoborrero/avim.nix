@@ -28,15 +28,6 @@
       url = "github:nix-community/nixvim";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    pi-agent-nvim = {
-      url = "github:aldoborrero/pi-agent.nvim";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        nixvim.follows = "nixvim";
-        blueprint.follows = "blueprint";
-        treefmt-nix.follows = "treefmt-nix";
-      };
-    };
   };
 
   outputs =
