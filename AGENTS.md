@@ -11,9 +11,16 @@ avim.nix/
 ├── flake.nix                 # Flake inputs and Blueprint configuration
 ├── formatter.nix             # treefmt-nix setup
 ├── devshell.nix              # Development environment
-└── packages/avim/
-    ├── default.nix           # Package wrapper script (rarely modified)
-    └── config.nix            # Main config: options, plugins, keymaps
+├── checks/
+│   ├── avim-startup.nix      # Headless nvim startup smoke test
+│   └── readme-keymaps.nix    # Fails when README keybindings drift from config.nix
+├── packages/avim/
+│   ├── default.nix           # Package wrapper script (rarely modified)
+│   ├── config.nix            # Main config: options, plugins, keymaps
+│   └── VERSION               # Package version — owned by the release workflow
+└── packages/docs/
+    ├── default.nix           # `nix run .#docs` — regenerates README keybindings
+    └── keymaps-md.nix        # Renders keymaps + which-key groups to markdown
 ```
 
 ## Key Files
@@ -23,16 +30,36 @@ avim.nix/
 | `packages/avim/config.nix` | All Neovim configuration | Adding plugins, keymaps, LSP servers, options |
 | `flake.nix` | Nix dependencies | Adding new flake inputs |
 | `formatter.nix` | Code formatting rules | Changing formatter settings |
+| `packages/avim/VERSION` | Package version | Never by hand — the release workflow writes it |
+| `README.md` keybindings section | Generated docs | Never by hand — run `nix run .#docs` |
 
 ## Build/Test/Lint Commands
 
 ```bash
 nix build .#avim      # Build the package
 nix run .#avim        # Run avim directly
-nix flake check       # Verify flake and run checks
+nix flake check       # Verify flake and run all checks (startup test, README sync, ...)
 nix fmt               # Format all code (deadnix, nixfmt, statix, shfmt, stylua, yamlfmt)
+nix run .#docs        # Regenerate the README keybindings section from config.nix
 rm -rf result*        # Clean build artifacts
 ```
+
+## CI, Auto-merge, and Releases
+
+- **CI is a single required check**: the `nix-flake-check` GitHub Actions workflow runs
+  `nix flake check`, which builds the package and all `checks/` (including the headless
+  startup test and the README-sync check). There is no other CI (Garnix was removed).
+- **Mergify auto-merges PRs** labeled `merge-queue` or `dependencies` once
+  `nix-flake-check` passes (`.mergify.yml`, rebase method). Label a PR `merge-queue`
+  and it merges itself in a few minutes — no manual merging needed.
+- **Weekly automation**: `auto-update.yaml` (Sunday 00:00 UTC) opens a single
+  `nix flake update` PR labeled `dependencies`; `release.yaml` (Monday 00:00 UTC)
+  refuses to run if update PRs are still open, bumps `packages/avim/VERSION` to
+  calver (`YYYY.MM.DD.N`), runs `nix flake check`, tags `vYYYY.MM.DD.N`, and
+  publishes a GitHub release. Both can be triggered manually via `workflow_dispatch`.
+- GitHub Actions in workflows are pinned to commit SHAs — keep it that way when
+  touching workflows, and pass dynamic values through `env:` blocks, never inline
+  `${{ }}` in `run:` scripts.
 
 ## Common Tasks
 
@@ -142,9 +169,12 @@ formatters_by_ft = {
 
 ### Keymaps
 
-- Always include `options.desc` for which-key discoverability
+- Always include `options.desc` for which-key discoverability — it is also the text
+  shown in the generated README tables, and keymaps without a desc are omitted from them
 - Group related keymaps together
 - Use consistent prefixes (`<leader>f` for find, `<leader>g` for git, etc.)
+- After any keymap change, run `nix run .#docs` and commit the regenerated README —
+  the `readme-keymaps` check fails CI otherwise
 
 ## Anti-patterns to Avoid
 
@@ -159,9 +189,19 @@ formatters_by_ft = {
 ## Testing Changes
 
 1. **Format**: `nix fmt`
-2. **Check**: `nix flake check`
-3. **Build**: `nix build .#avim`
-4. **Test**: `nix run .#avim` and verify functionality manually
+2. **Docs** (if keymaps changed): `nix run .#docs`
+3. **Check**: `nix flake check` (includes the headless startup test and README-sync check)
+4. **Build**: `nix build .#avim`
+5. **Test**: `nix run .#avim` and verify functionality manually
+
+## Conventions Learned
+
+- Formatter binaries used by conform (`prettier`, `stylua`, `gofumpt`, ...) and tools
+  used by keymaps (`lazygit`) are bundled via `extraPackages` in `config.nix` — if a
+  keymap or formatter needs a binary, add it there rather than assuming the host has it.
+  `terraform` is deliberately not bundled (unfree license).
+- This nixpkgs has `nodePackages` removed — use top-level attrs (e.g. `prettier`).
+- The repo prefers removing unused code/config outright over `enable = false` stubs.
 
 ## Dependencies
 
