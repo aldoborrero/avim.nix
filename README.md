@@ -125,7 +125,7 @@ $ nix run avim#avim
 | `<leader>uD` | Normal | Dismiss notifications |
 | `<leader>uZ` | Normal | Toggle zen mode |
 | `<leader>uf` | Normal | Toggle auto-format |
-| `<leader>uu` | Normal | Toggle undotree |
+| `<leader>uu` | Normal | Toggle undo tree |
 
 ### Harpoon
 
@@ -210,8 +210,8 @@ $ nix run avim#avim
 | `<F11>` | Terminal | Toggle terminal 3 |
 | `<F12>` | Normal | Toggle terminal 4 |
 | `<F12>` | Terminal | Toggle terminal 4 |
-| `<C-l>` | Insert, Select | Luasnip jump next |
-| `<C-h>` | Insert, Select | Luasnip jump prev |
+| `<C-l>` | Insert, Select | Snippet jump next |
+| `<C-h>` | Insert, Select | Snippet jump prev |
 
 <!-- keymaps:end -->
 

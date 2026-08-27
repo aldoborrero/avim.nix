@@ -21,6 +21,12 @@
     taplo
   ];
 
+  # Snippet collection read directly by blink.cmp's builtin snippet source;
+  # expansion and tabstop jumping are handled by Neovim's native `vim.snippet`
+  extraPlugins = with pkgs.vimPlugins; [
+    friendly-snippets
+  ];
+
   colorschemes.catppuccin.enable = true;
 
   opts = {
@@ -537,11 +543,11 @@
       options.desc = "Flash treesitter search";
     }
 
-    # Undotree
+    # Undo tree (builtin nvim.undotree package)
     {
       key = "<leader>uu";
-      action = "<cmd>UndotreeToggle<CR>";
-      options.desc = "Toggle undotree";
+      action = "<cmd>Undotree<CR>";
+      options.desc = "Toggle undo tree";
     }
 
     # Todo comments
@@ -887,7 +893,7 @@
       options.desc = "Clear all Harpoon marks";
     }
 
-    # Luasnip navigation
+    # Snippet navigation (native vim.snippet)
     {
       mode = [
         "i"
@@ -896,14 +902,14 @@
       key = "<C-l>";
       action.__raw = ''
         function()
-          if require("luasnip").locally_jumpable(1) then
-            require("luasnip").jump(1)
+          if vim.snippet.active { direction = 1 } then
+            vim.snippet.jump(1)
           end
         end
       '';
       options = {
         silent = true;
-        desc = "Luasnip jump next";
+        desc = "Snippet jump next";
       };
     }
     {
@@ -914,14 +920,14 @@
       key = "<C-h>";
       action.__raw = ''
         function()
-          if require("luasnip").locally_jumpable(-1) then
-            require("luasnip").jump(-1)
+          if vim.snippet.active { direction = -1 } then
+            vim.snippet.jump(-1)
           end
         end
       '';
       options = {
         silent = true;
-        desc = "Luasnip jump prev";
+        desc = "Snippet jump prev";
       };
     }
   ];
@@ -1078,18 +1084,8 @@
         fuzzy = {
           prebuilt_binaries.download = true;
         };
-        snippets.preset = "luasnip";
+        snippets.preset = "default";
       };
-    };
-
-    luasnip = {
-      enable = true;
-      fromVscode = [
-        {
-          lazyLoad = true;
-          paths = "${pkgs.vimPlugins.friendly-snippets}";
-        }
-      ];
     };
 
     lualine = {
@@ -1487,11 +1483,6 @@
       };
     };
 
-    undotree = {
-      enable = true;
-      settings.SetFocusWhenToggle = true;
-    };
-
     todo-comments = {
       enable = true;
       settings = {
@@ -1601,6 +1592,12 @@
       };
     };
   };
+
+  # Builtin optional packages shipped with Neovim, loaded on startup because
+  # they only register commands (see `:h standard-plugin-list`)
+  extraConfigLua = ''
+    vim.cmd.packadd "nvim.undotree"
+  '';
 
   # Autocommands
   autoCmd = [

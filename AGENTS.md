@@ -202,6 +202,12 @@ formatters_by_ft = {
   `terraform` is deliberately not bundled (unfree license).
 - This nixpkgs has `nodePackages` removed — use top-level attrs (e.g. `prettier`).
 - The repo prefers removing unused code/config outright over `enable = false` stubs.
+- Prefer Neovim builtins over a plugin when one exists. Optional builtin packages
+  (`:h standard-plugin-list`, e.g. `nvim.undotree`, `nvim.difftool`) have no Nixvim
+  option — load them with `vim.cmd.packadd` in `extraConfigLua`. `undotree` was
+  dropped this way in favour of `:Undotree`, and `luasnip` in favour of
+  `vim.snippet` (blink.cmp's `snippets.preset = "default"`, with `friendly-snippets`
+  in `extraPlugins` so blink's builtin snippet source picks it up from the rtp).
 
 ## Dependencies
 
