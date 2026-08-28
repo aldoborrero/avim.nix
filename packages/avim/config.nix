@@ -12,7 +12,7 @@
     gofumpt
     gotools
     lazygit
-    nixfmt-rfc-style
+    nixfmt
     prettier
     ruff
     rustfmt
@@ -1575,7 +1575,7 @@
           json = [ "prettier" ];
           lua = [ "stylua" ];
           markdown = [ "prettier" ];
-          nix = [ "nixfmt-rfc-style" ];
+          nix = [ "nixfmt" ];
           python = [
             "ruff_format"
             "ruff_organize_imports"
